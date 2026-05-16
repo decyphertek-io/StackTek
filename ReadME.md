@@ -58,7 +58,7 @@ The following directories are created automatically by the clone and used as bin
 
 PolyForm Noncommercial License 1.0.0 — see [LICENSE](LICENSE).
 
-The compiled StackTek binary and container image are proprietary. Workspace Containerfiles, compose files, and configuration files in this repository are provided under the license above.
+The compiled StackTek binary and container image are proprietary and covered by the PolyForm Noncommercial License above. All other components in this repository (workspace Containerfiles, compose files, and third-party software configurations) retain their original open source licenses as distributed by their respective upstream projects.
 
 ## Required Notice
 
