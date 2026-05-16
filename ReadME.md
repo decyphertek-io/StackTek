@@ -4,7 +4,7 @@ Secure browser-native workspace platform. Launch web desktops, AI agents, and co
 
 ## Overview
 
-StackTek runs on Fedora CoreOS (AWS) and orchestrates containerized workspaces via rootless Podman. A Caddy + Coraza WAF edge proxy handles TLS termination and WAF protection. The StackTek orchestrator manages workspace lifecycle, VNC bridging, and web app proxying.
+StackTek runs on Fedora CoreOS and orchestrates containerized workspaces via rootless Podman. A Caddy + Coraza WAF edge proxy handles TLS termination and WAF protection. The StackTek orchestrator manages workspace lifecycle, VNC bridging, and web app proxying.
 
 ## Workspaces
 
