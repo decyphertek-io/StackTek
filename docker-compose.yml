@@ -8,7 +8,7 @@ services:
   # Image is prebuilt in CI (.github/workflows/stacktek-images.yml) and pulled
   # from GHCR at boot — see startup.sh.
   stacktek:
-    image: ghcr.io/decyphertek-io/stacktek:latest
+    image: ghcr.io/decyphertek-io/stacktek/stacktek:latest
     container_name: stacktek
     networks: [stacktek]
     expose:
@@ -48,7 +48,7 @@ services:
   # Image prebuilt in CI (xcaddy compile is slow — done once on GHA, not on
   # every CoreOS boot). Only :443 is exposed to the host.
   caddy:
-    image: ghcr.io/decyphertek-io/stacktek-caddy:latest
+    image: ghcr.io/decyphertek-io/stacktek/stacktek-caddy:latest
     container_name: stacktek-caddy
     depends_on:
       stacktek:
