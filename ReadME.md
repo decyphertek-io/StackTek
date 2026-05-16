@@ -27,7 +27,7 @@ Under the hood, StackTek runs on Fedora CoreOS on AWS using rootless Podman, kee
 ```bash
 git clone https://github.com/decyphertek-io/stacktek.git
 cd stacktek
-podman-compose up -d
+podman-compose -f compose.yml up -d
 ```
 
 The following directories are created automatically by the clone and used as bind mounts at runtime:

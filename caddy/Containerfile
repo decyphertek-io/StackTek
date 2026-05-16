@@ -1,5 +1,3 @@
-# Caddy + Coraza WAF (OWASP CRS) — built and pushed to GHCR by CI.
-
 FROM docker.io/library/caddy:2-builder AS builder
 
 RUN xcaddy build \

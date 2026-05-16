@@ -5,7 +5,7 @@ networks:
 services:
   # StackTek Rust orchestrator — handles auth, workspace lifecycle, VNC WebSocket
   # proxy (rustvncserver crate), and web app reverse proxy (/apps/*).
-  # Image is prebuilt in CI (.github/workflows/stacktek-images.yml) and pulled
+  # Image is prebuilt in CI (.github/workflows/build-images.yml) and pulled
   # from GHCR at boot — see startup.sh.
   stacktek:
     image: ghcr.io/decyphertek-io/stacktek/stacktek:latest
