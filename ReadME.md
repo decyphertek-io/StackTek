@@ -4,7 +4,13 @@ Secure browser-native workspace platform. Launch web desktops, AI agents, and co
 
 ## Overview
 
-StackTek runs on Fedora CoreOS (AWS) and orchestrates containerized workspaces via rootless Podman. A Caddy + Coraza WAF edge proxy handles TLS termination and WAF protection. The StackTek orchestrator manages workspace lifecycle, VNC bridging, and web app proxying.
+StackTek makes it simple to access fully isolated web desktops, AI agents, and Linux applications directly from your browser — no VPN, no SSH, no client software required.
+
+Each workspace is a container that spins up on demand. Web desktops stream a full Linux desktop (XFCE) to your browser over VNC with WebRTC audio. AI agents run as persistent services accessible over HTTPS. Linux applications launch in a minimal windowed environment and display directly in the browser tab — just like a remote desktop but containerized and disposable.
+
+Everything is secured behind TLS with a Caddy + Coraza WAF edge proxy enforcing the OWASP Core Rule Set. Sessions are authenticated and isolated — each user gets their own container instance with persistent data that survives restarts. Containers are built fresh on each launch from the workspace definitions in this repo, so the environment is always clean and reproducible.
+
+Under the hood, StackTek runs on Fedora CoreOS on AWS using rootless Podman, keeping the attack surface minimal and the host OS immutable.
 
 ## Workspaces
 
@@ -28,6 +34,16 @@ The following directories are created automatically by the clone and used as bin
 
 - `data/sessions/` — persistent session data
 - `caddy/` — Caddy config and runtime data
+
+## Known Issues
+
+> **Status: Active Development — expect bugs and breaking changes.**
+
+| Issue | Status |
+|---|---|
+| WebRTC audio in web desktops | Not working |
+| AI agent workspaces | Untested |
+| App workspaces (single-app containers) | Untested |
 
 ## License
 
