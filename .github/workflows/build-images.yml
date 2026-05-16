@@ -1,0 +1,59 @@
+name: build images
+
+# Triggered by ansible-build after it compiles the Rust binary and uploads
+# the workflow artifact. Running in this repo ensures GHCR links the packages
+# to stacktek automatically — no manual package linking required.
+
+on:
+  repository_dispatch:
+    types: [stacktek-build]
+
+env:
+  IMAGE_STACKTEK: ghcr.io/decyphertek-io/stacktek/stacktek
+  IMAGE_CADDY: ghcr.io/decyphertek-io/stacktek/stacktek-caddy
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download binary + static tarball from ansible-build
+        env:
+          RUN_ID: ${{ github.event.client_payload.run_id }}
+          CROSS_REPO_PAT: ${{ secrets.CROSS_REPO_PAT }}
+        run: |
+          ARTIFACT_URL=$(curl -sf \
+            -H "Authorization: token $CROSS_REPO_PAT" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/decyphertek-io/ansible-build/actions/runs/${RUN_ID}/artifacts" \
+            | jq -r '.artifacts[] | select(.name=="stacktek-release") | .archive_download_url')
+
+          curl -sfL \
+            -H "Authorization: token $CROSS_REPO_PAT" \
+            -o /tmp/stacktek-release.zip \
+            "$ARTIFACT_URL"
+
+          unzip /tmp/stacktek-release.zip -d /tmp/stacktek-release
+
+      - name: Stage binary and static assets into build context
+        run: |
+          cp /tmp/stacktek-release/stacktek ./stacktek
+          chmod +x ./stacktek
+          tar -xzf /tmp/stacktek-release/static.tar.gz -C .
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build + push stacktek
+        run: |
+          docker build -t "${{ env.IMAGE_STACKTEK }}:latest" -f Containerfile .
+          docker push "${{ env.IMAGE_STACKTEK }}:latest"
+
+      - name: Build + push stacktek-caddy
+        run: |
+          docker build -t "${{ env.IMAGE_CADDY }}:latest" -f caddy/Containerfile caddy
+          docker push "${{ env.IMAGE_CADDY }}:latest"
