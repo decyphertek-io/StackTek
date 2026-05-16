@@ -2,6 +2,8 @@
 
 Secure browser-native workspace platform. Launch web desktops, AI agents, and containerized apps — all accessible through your browser over TLS with no VPN required.
 
+> **This project is under active development. Many features are still being implemented and things may break.**
+
 ## Overview
 
 StackTek makes it simple to access fully isolated web desktops, AI agents, and Linux applications directly from your browser — no VPN, no SSH, no client software required.
