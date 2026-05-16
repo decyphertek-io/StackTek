@@ -1,0 +1,9 @@
+name = "ubuntu-xfce"
+display_name = "Ubuntu / XFCE"
+description = "Ubuntu LTS desktop with XFCE and TigerVNC."
+category = "desktop"
+icon = "ubuntu"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

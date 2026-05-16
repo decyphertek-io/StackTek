@@ -1,0 +1,12 @@
+# Placeholder stack — flip on with: podman-compose --profile upstream up -d
+networks:
+  stacktek_net:
+    name: stacktek_stacktek
+    external: true
+
+services:
+  placeholder:
+    image: docker.io/library/alpine:3.21
+    profiles: ["upstream"]
+    command: ["sleep", "infinity"]
+    networks: [stacktek_net]

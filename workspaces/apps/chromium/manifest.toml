@@ -1,0 +1,9 @@
+name = "chromium"
+display_name = "Chromium"
+description = "Debian desktop with Chromium browser via TigerVNC."
+category = "desktop"
+icon = "chromium"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

@@ -1,0 +1,9 @@
+name = "telegram"
+display_name = "Telegram"
+description = "Debian desktop running Telegram Desktop over TigerVNC."
+category = "desktop"
+icon = "telegram"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

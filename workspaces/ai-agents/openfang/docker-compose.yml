@@ -1,0 +1,12 @@
+# Placeholder stack — flip on when you have a runnable upstream image (+ profile upstream).
+networks:
+  stacktek_net:
+    name: stacktek_stacktek
+    external: true
+
+services:
+  placeholder:
+    image: docker.io/library/alpine:3.21
+    profiles: ["upstream"]
+    command: ["sleep", "infinity"]
+    networks: [stacktek_net]

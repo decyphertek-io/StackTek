@@ -1,0 +1,9 @@
+name = "thunderbird"
+display_name = "Thunderbird"
+description = "Debian desktop running Mozilla Thunderbird over TigerVNC."
+category = "desktop"
+icon = "thunderbird"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

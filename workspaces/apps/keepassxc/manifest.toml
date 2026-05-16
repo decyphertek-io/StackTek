@@ -1,0 +1,9 @@
+name = "keepassxc"
+display_name = "KeePassXC"
+description = "Debian desktop running KeePassXC password manager over TigerVNC."
+category = "desktop"
+icon = "keepassxc"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

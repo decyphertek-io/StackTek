@@ -1,0 +1,8 @@
+name = "openclaw"
+display_name = "Openclaw"
+description = "Open-source autonomous research and red-team agent."
+category = "ai"
+icon = "openclaw"
+web_port = 8000
+data_path = "/data"
+coming_soon = true

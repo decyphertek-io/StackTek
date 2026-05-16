@@ -1,0 +1,9 @@
+name = "signal"
+display_name = "Signal"
+description = "Debian desktop running Signal Desktop over TigerVNC."
+category = "desktop"
+icon = "signal"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

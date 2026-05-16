@@ -1,0 +1,8 @@
+name = "zero-agent"
+display_name = "Zero Agent"
+description = "Local-first AI agent runtime with tool-use and web access."
+category = "ai"
+icon = "zero-agent"
+web_port = 3000
+data_path = "/data"
+coming_soon = true

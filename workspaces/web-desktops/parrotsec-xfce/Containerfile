@@ -1,0 +1,39 @@
+# Parrot Security + XFCE + TigerVNC + PipeWire (Debian-derived base).
+# Extra GUIs: workspaces/apps/<app-name>/.
+
+FROM docker.io/parrotsec/core:latest
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        sudo ca-certificates curl wget gnupg locales \
+        dbus dbus-x11 xfce4 xfce4-terminal xfce4-goodies \
+        tigervnc-standalone-server tigervnc-common \
+        pipewire pipewire-pulse pipewire-audio wireplumber \
+        pulseaudio-utils \
+        firefox-esr nano vim git \
+        net-tools iputils-ping \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -s /bin/bash -u 1000 -G sudo,video,plugdev,audio adminotaur \
+    && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
+    && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
+                /home/adminotaur/.config/pipewire/pipewire-pulse.conf.d \
+                /home/adminotaur/data \
+    && printf '#!/bin/sh\nexport XKL_XMODMAP_DISABLE=1\nexport XDG_DATA_DIRS="/usr/local/share:/usr/share"\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nxfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null || true\nxfce4-session\n' \
+        > /home/adminotaur/.vnc/xstartup \
+    && printf '#!/bin/sh\nexport XKL_XMODMAP_DISABLE=1\nexport XDG_DATA_DIRS="/usr/local/share:/usr/share"\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nxfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null || true\nxfce4-session\n' \
+        > /home/adminotaur/.config/tigervnc/xstartup \
+    && chmod +x /home/adminotaur/.vnc/xstartup /home/adminotaur/.config/tigervnc/xstartup \
+    && printf 'session=xfce4\ngeometry=1920x1080\ndepth=24\nlocalhost=no\n' \
+        > /home/adminotaur/.vnc/config \
+    && chown -R adminotaur:adminotaur /home/adminotaur
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 5901 4713
+ENV USER=adminotaur HOME=/home/adminotaur DISPLAY=:1
+CMD ["/start.sh"]

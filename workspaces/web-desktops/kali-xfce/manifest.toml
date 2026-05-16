@@ -1,0 +1,8 @@
+name = "kali-xfce"
+display_name = "Kali Linux / XFCE"
+description = "Kali Linux Rolling desktop with XFCE, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "kali"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

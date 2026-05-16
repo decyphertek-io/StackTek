@@ -1,0 +1,9 @@
+name = "arch-xfce"
+display_name = "Arch Linux / XFCE"
+description = "Rolling-release Arch desktop with XFCE and TigerVNC."
+category = "desktop"
+icon = "arch"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

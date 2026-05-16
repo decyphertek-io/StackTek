@@ -1,0 +1,31 @@
+# OpenClaw sidecar stack for this workspace (joins StackTek bridge).
+networks:
+  stacktek_net:
+    name: stacktek_stacktek
+    external: true
+
+services:
+  openclaw-redis:
+    image: docker.io/library/redis:7-alpine
+    container_name: stacktek-openclaw-redis
+    networks: [stacktek_net]
+    restart: unless-stopped
+    command: >-
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: stacktek-openclaw
+    networks: [stacktek_net]
+    depends_on:
+      - openclaw-redis
+    user: "1000:1000"
+    restart: unless-stopped
+    environment:
+      - OPENCLAW_LOG_LEVEL=info
+      - OPENCLAW_ALLOWED_ORIGINS=*
+      - REDIS_URL=redis://openclaw-redis:6379
+    volumes:
+      - /home/core/.podman/stacktek/ai-agents/openclaw/data:/app/openclaw-data:Z

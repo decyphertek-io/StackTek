@@ -1,0 +1,43 @@
+# Minimal Openbox + TigerVNC — Telegram Desktop only.
+FROM docker.io/library/debian:13-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+RUN set -eux; \
+    if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+      sed -i 's/^Components:.*/Components: main contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian.sources; \
+    fi; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        sudo ca-certificates curl wget locales \
+        dbus dbus-x11 openbox menu \
+        tigervnc-standalone-server tigervnc-common \
+        pipewire pipewire-pulse pipewire-audio wireplumber pulseaudio-utils \
+        nano vim net-tools iputils-ping \
+        telegram-desktop \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -s /bin/bash -u 1000 -G sudo,video,plugdev,audio adminotaur \
+    && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
+    && mkdir -p /home/adminotaur/.vnc /home/adminotaur/data \
+                /home/adminotaur/.config/pipewire/pipewire-pulse.conf.d \
+                /home/adminotaur/.config/openbox \
+    && printf '%s\n' '#!/bin/sh' 'unset SESSION_MANAGER' 'unset DBUS_SESSION_BUS_ADDRESS' \
+        'exec openbox-session' \
+        > /home/adminotaur/.vnc/xstartup \
+    && chmod +x /home/adminotaur/.vnc/xstartup \
+    && printf '%s\n' '#!/bin/sh' 'telegram-desktop --no-sandbox >/tmp/telegram.log 2>&1 &' \
+        > /home/adminotaur/.config/openbox/autostart \
+    && chmod +x /home/adminotaur/.config/openbox/autostart \
+    && printf 'geometry=1920x1080\ndepth=24\nlocalhost=no\n' \
+        > /home/adminotaur/.vnc/config \
+    && chown -R adminotaur:adminotaur /home/adminotaur
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 5901 4713
+ENV USER=adminotaur HOME=/home/adminotaur DISPLAY=:1
+CMD ["/start.sh"]

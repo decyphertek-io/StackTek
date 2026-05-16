@@ -1,0 +1,18 @@
+# Flowise — long-running runtime for this workspace (joins StackTek bridge).
+networks:
+  stacktek_net:
+    name: stacktek_stacktek
+    external: true
+
+services:
+  flowise:
+    image: docker.io/flowiseai/flowise:latest
+    container_name: stacktek-flowise
+    networks: [stacktek_net]
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - /home/core/.podman/stacktek/ai-agents/flowise/data:/root/.flowise:Z

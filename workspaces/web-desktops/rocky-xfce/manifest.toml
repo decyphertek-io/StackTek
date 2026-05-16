@@ -1,0 +1,9 @@
+name = "rocky-xfce"
+display_name = "Rocky Linux / XFCE"
+description = "Rocky Linux 9 desktop with XFCE and TigerVNC. RHEL-compatible."
+category = "desktop"
+icon = "rocky"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

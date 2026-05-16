@@ -1,0 +1,40 @@
+# Rocky Linux 9 + XFCE + TigerVNC + PipeWire.
+# Extra GUIs: workspaces/apps/<app-name>/.
+
+FROM docker.io/rockylinux/rockylinux:9
+
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+RUN dnf install -y dnf-plugins-core \
+    && dnf install -y epel-release \
+    && dnf install -y --allowerasing \
+        sudo ca-certificates curl wget gnupg2 glibc-langpack-en \
+        dbus dbus-x11 \
+        tigervnc-server tigervnc-server-minimal tigervnc \
+        @xfce-desktop \
+        firefox \
+        pipewire pipewire-pulseaudio wireplumber pulseaudio-utils \
+        nano vim git \
+        procps-ng iproute iputils hostname \
+    && dnf clean all
+
+RUN useradd -m -s /bin/bash -u 1000 -G wheel,video,plugdev,audio adminotaur \
+    && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
+    && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
+                /home/adminotaur/data \
+    && printf '#!/bin/sh\nexport XKL_XMODMAP_DISABLE=1\nexport XDG_DATA_DIRS="/usr/local/share:/usr/share"\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nxfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null || true\nxfce4-session\n' \
+        > /home/adminotaur/.vnc/xstartup \
+    && printf '#!/bin/sh\nexport XKL_XMODMAP_DISABLE=1\nexport XDG_DATA_DIRS="/usr/local/share:/usr/share"\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nxfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null || true\nxfce4-session\n' \
+        > /home/adminotaur/.config/tigervnc/xstartup \
+    && chmod +x /home/adminotaur/.vnc/xstartup /home/adminotaur/.config/tigervnc/xstartup \
+    && printf 'session=xfce4\ngeometry=1920x1080\ndepth=24\nlocalhost=no\n' \
+        > /home/adminotaur/.vnc/config \
+    && chown -R adminotaur:adminotaur /home/adminotaur
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 5901 4713
+ENV USER=adminotaur HOME=/home/adminotaur DISPLAY=:1
+CMD ["/start.sh"]

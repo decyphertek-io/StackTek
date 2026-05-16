@@ -1,0 +1,69 @@
+networks:
+  stacktek:
+    driver: bridge
+
+services:
+  # StackTek Rust orchestrator — handles auth, workspace lifecycle, VNC WebSocket
+  # proxy (rustvncserver crate), and web app reverse proxy (/apps/*).
+  # Image is prebuilt in CI (.github/workflows/stacktek-images.yml) and pulled
+  # from GHCR at boot — see startup.sh.
+  stacktek:
+    image: ghcr.io/decyphertek-io/stacktek:latest
+    container_name: stacktek
+    networks: [stacktek]
+    expose:
+      - "8443"
+    environment:
+      - RUST_LOG=stacktek=debug,stacktek::proxy=debug,tower_http=info
+      - STACKTEK_BIND=0.0.0.0:8443
+      - STACKTEK_WORKSPACES=/workspaces
+      - STACKTEK_DATA=/data
+      # Host-side equivalent of STACKTEK_DATA — Podman runs on the host and
+      # needs the host path when stacktek asks it to bind-mount a per-session
+      # data dir into a workspace container.
+      - STACKTEK_DATA_HOST_DIR=/home/core/.podman/stacktek/data
+      - STACKTEK_STATIC=/static
+      - STACKTEK_TLS_CERT=/certs/cert.pem
+      - STACKTEK_TLS_KEY=/certs/key.pem
+    volumes:
+      - /home/core/.podman/stacktek/workspaces:/workspaces:ro,z
+      - /home/core/.podman/stacktek/data:/data:rw
+      # Same self-signed cert Caddy serves — the bridge hop is encrypted too.
+      - /home/core/.podman/stacktek/certs:/certs:ro,z
+      # Host runtime socket — stacktek talks to it via the podman REST API
+      # (bollard). :z relabels it container_file_t so chainguard/static can
+      # read it under SELinux=Enforcing.
+      - /run/user/1000/podman/podman.sock:/run/podman.sock:z
+    security_opt:
+      - "label:disable"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/stacktek", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # Caddy + Coraza WAF (OWASP CRS) edge proxy.
+  # Image prebuilt in CI (xcaddy compile is slow — done once on GHA, not on
+  # every CoreOS boot). Only :443 is exposed to the host.
+  caddy:
+    image: ghcr.io/decyphertek-io/stacktek-caddy:latest
+    container_name: stacktek-caddy
+    depends_on:
+      stacktek:
+        condition: service_healthy
+    networks: [stacktek]
+    ports:
+      - "443:443"
+    volumes:
+      - /home/core/.podman/stacktek/caddy/Caddyfile:/etc/caddy/Caddyfile:ro,z
+      - /home/core/.podman/stacktek/certs:/certs:ro,z
+      - /home/core/.podman/stacktek/caddy/data:/data:rw,Z
+      - /home/core/.podman/stacktek/caddy/config:/config:rw,Z
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --no-check-certificate https://127.0.0.1/api/health >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

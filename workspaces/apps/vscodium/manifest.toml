@@ -1,0 +1,9 @@
+name = "vscodium"
+display_name = "VSCodium"
+description = "Debian desktop running VSCodium (codium) over TigerVNC."
+category = "desktop"
+icon = "vscodium"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"
+coming_soon = true

@@ -1,0 +1,8 @@
+name = "flowise"
+display_name = "Flowise"
+description = "Drag-and-drop UI to build LLM flows and AI agents."
+category = "ai"
+icon = "flowise"
+web_port = 3000
+data_path = "/root/.flowise"
+coming_soon = true

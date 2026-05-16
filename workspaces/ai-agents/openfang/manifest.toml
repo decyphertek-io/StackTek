@@ -1,0 +1,8 @@
+name = "openfang"
+display_name = "OpenFang"
+description = "Self-hosted offensive AI assistant for security research."
+category = "ai"
+icon = "openfang"
+web_port = 8080
+data_path = "/data"
+coming_soon = true
