@@ -10,6 +10,10 @@ Fails:
 * Openclaw ( Build Fails )
 * Deleting & Stopping Sessions 
 
+Update Script:
+-------------
+* Create an update script in /opt/
+
 Troublshooting:
 --------------
 podman logs stacktek 2>&1 | cat | grep -i "openclaw\|arch\|compose\|failed\|error" | tail -50
