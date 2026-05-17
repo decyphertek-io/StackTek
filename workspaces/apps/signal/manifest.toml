@@ -1,8 +1,7 @@
 name = "signal"
 display_name = "Signal"
-description = "Debian desktop running Signal Desktop over TigerVNC."
-category = "app"
+description = "Signal Desktop delivered as a headless web app."
+category = "web"
 icon = "signal"
-vnc_port = 5901
-audio_port = 4713
-data_path = "/home/adminotaur/data"
+web_port = 3000
+data_path = "/config"

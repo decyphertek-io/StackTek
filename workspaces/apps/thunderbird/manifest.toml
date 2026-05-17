@@ -1,8 +1,7 @@
 name = "thunderbird"
 display_name = "Thunderbird"
-description = "Debian desktop running Mozilla Thunderbird over TigerVNC."
-category = "app"
+description = "Mozilla Thunderbird delivered as a headless web app."
+category = "web"
 icon = "thunderbird"
-vnc_port = 5901
-audio_port = 4713
-data_path = "/home/adminotaur/data"
+web_port = 3000
+data_path = "/config"

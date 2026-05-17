@@ -1,0 +1,15 @@
+services:
+  thunderbird:
+    image: lscr.io/linuxserver/thunderbird:latest
+    container_name: stacktek-thunderbird
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/core/.podman/stacktek/data/thunderbird:/config
+    expose:
+      - "3000"
+      - "3001"
+    shm_size: "1gb"
+    restart: unless-stopped

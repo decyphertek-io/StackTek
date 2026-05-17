@@ -1,0 +1,15 @@
+services:
+  libreoffice:
+    image: lscr.io/linuxserver/libreoffice:latest
+    container_name: stacktek-libreoffice
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/core/.podman/stacktek/data/libreoffice:/config
+    expose:
+      - "3000"
+      - "3001"
+    shm_size: "1gb"
+    restart: unless-stopped

@@ -1,8 +1,7 @@
 name = "telegram"
 display_name = "Telegram"
-description = "Debian desktop running Telegram Desktop over TigerVNC."
-category = "app"
+description = "Telegram Desktop delivered as a headless web app."
+category = "web"
 icon = "telegram"
-vnc_port = 5901
-audio_port = 4713
-data_path = "/home/adminotaur/data"
+web_port = 3000
+data_path = "/config"

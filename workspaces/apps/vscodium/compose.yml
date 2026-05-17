@@ -1,0 +1,17 @@
+services:
+  vscodium:
+    image: lscr.io/linuxserver/vscodium:latest
+    container_name: stacktek-vscodium
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/core/.podman/stacktek/data/vscodium:/config
+    expose:
+      - "3000"
+      - "3001"
+    shm_size: "1gb"
+    restart: unless-stopped

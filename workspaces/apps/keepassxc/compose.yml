@@ -1,0 +1,15 @@
+services:
+  keepassxc:
+    image: lscr.io/linuxserver/keepassxc:latest
+    container_name: stacktek-keepassxc
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /home/core/.podman/stacktek/data/keepassxc:/config
+    expose:
+      - "3000"
+      - "3001"
+    shm_size: "1gb"
+    restart: unless-stopped

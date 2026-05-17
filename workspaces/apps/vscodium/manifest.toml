@@ -1,8 +1,7 @@
 name = "vscodium"
 display_name = "VSCodium"
-description = "Debian desktop running VSCodium (codium) over TigerVNC."
-category = "app"
+description = "VSCodium delivered as a headless web app."
+category = "web"
 icon = "vscodium"
-vnc_port = 5901
-audio_port = 4713
-data_path = "/home/adminotaur/data"
+web_port = 3000
+data_path = "/config"

@@ -1,8 +1,7 @@
 name = "libreoffice"
 display_name = "LibreOffice"
-description = "Debian desktop with LibreOffice Writer, Calc, and Impress over TigerVNC."
-category = "app"
+description = "LibreOffice suite delivered as a headless web app."
+category = "web"
 icon = "libreoffice"
-vnc_port = 5901
-audio_port = 4713
-data_path = "/home/adminotaur/data"
+web_port = 3000
+data_path = "/config"
