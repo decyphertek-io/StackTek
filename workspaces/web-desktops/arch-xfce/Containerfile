@@ -14,7 +14,7 @@ RUN pacman-key --init >/dev/null 2>&1 || true \
         iproute2 inetutils procps-ng \
     && pacman -Scc --noconfirm
 
-RUN useradd -m -s /bin/bash -u 1000 -G wheel,video,plugdev,audio adminotaur \
+RUN useradd -m -s /bin/bash -u 1000 -G wheel,video,audio adminotaur \
     && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
     && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
                 /home/adminotaur/.config/pipewire/pipewire-pulse.conf.d \

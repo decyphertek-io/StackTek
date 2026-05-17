@@ -1,8 +1,7 @@
 name = "chromium"
 display_name = "Chromium"
-description = "Debian desktop with Chromium browser via TigerVNC."
-category = "app"
+description = "Chromium browser delivered as a headless web app."
+category = "web"
 icon = "chromium"
-vnc_port = 5901
-audio_port = 4713
-data_path = "/home/adminotaur/data"
+web_port = 3000
+data_path = "/config"
