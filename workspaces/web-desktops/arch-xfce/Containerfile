@@ -9,7 +9,7 @@ RUN pacman-key --init >/dev/null 2>&1 || true \
     && pacman -S --noconfirm --needed \
         sudo ca-certificates curl wget dbus gnupg \
         tigervnc xfce4 xfce4-terminal xfce4-goodies \
-        pipewire pipewire-pulse wireplumber pulseaudio-utils \
+        pipewire pipewire-pulse wireplumber libpulse \
         firefox nano vim git \
         iproute2 inetutils procps-ng \
     && pacman -Scc --noconfirm

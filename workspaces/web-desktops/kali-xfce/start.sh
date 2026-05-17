@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p /run/dbus
 dbus-daemon --system --fork || true
 
 # Clear any stale X11 lock / socket from a previous stop+start cycle.
@@ -56,4 +57,4 @@ su - adminotaur -c "
     --I-KNOW-THIS-IS-INSECURE
 "
 
-exec tail -F /home/adminotaur/.vnc/*:1.log
+exec tail -F "/home/adminotaur/.vnc/$(hostname):1.log"

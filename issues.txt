@@ -1,0 +1,16 @@
+Works:
+------
+* Debian Web Dekstop
+
+Fails:
+------
+* Arch Linux ( Build Fails )
+* Kali Linux ( Build Succeeds, yet connection fails )
+* Chromium ( Build Succeeds, yet connection fails )
+* Openclaw ( Build Fails )
+* Deleting & Stopping Sessions 
+
+Troublshooting:
+--------------
+podman logs stacktek 2>&1 | cat | grep -i "openclaw\|arch\|compose\|failed\|error" | tail -50
+podman logs stacktek-kali-xfce-8c9fdc2e 2>&1 | cat | tail -50

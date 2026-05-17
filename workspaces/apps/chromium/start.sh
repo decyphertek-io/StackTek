@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p /run/dbus
 dbus-daemon --system --fork || true
 
 su - adminotaur -c "vncserver -kill :1" >/dev/null 2>&1 || true
@@ -51,4 +52,4 @@ su - adminotaur -c "
     --I-KNOW-THIS-IS-INSECURE
 "
 
-exec tail -F /home/adminotaur/.vnc/*:1.log
+exec tail -F "/home/adminotaur/.vnc/$(hostname):1.log"
