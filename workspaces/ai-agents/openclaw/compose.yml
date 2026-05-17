@@ -1,31 +1,85 @@
-# OpenClaw sidecar stack for this workspace (joins StackTek bridge).
-networks:
-  stacktek_net:
-    name: stacktek_stacktek
-    external: true
-
 services:
-  openclaw-redis:
-    image: docker.io/library/redis:7-alpine
-    container_name: stacktek-openclaw-redis
-    networks: [stacktek_net]
-    restart: unless-stopped
-    command: >-
-      redis-server
-      --maxmemory 256mb
-      --maxmemory-policy allkeys-lru
-
-  openclaw:
+  openclaw-gateway:
     image: ghcr.io/openclaw/openclaw:latest
-    container_name: stacktek-openclaw
-    networks: [stacktek_net]
-    depends_on:
-      - openclaw-redis
-    user: "1000:1000"
-    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
     environment:
-      - OPENCLAW_LOG_LEVEL=info
-      - OPENCLAW_ALLOWED_ORIGINS=*
-      - REDIS_URL=redis://openclaw-redis:6379
+      HOME: /home/node
+      OPENCLAW_HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_STATE_DIR: /home/node/.openclaw
+      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+      OPENCLAW_CONFIG_DIR: /home/node/.openclaw
+      OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+      OPENCLAW_GATEWAY_BIND: lan
+      OPENCLAW_DISABLE_BONJOUR: "1"
+      TZ: UTC
     volumes:
-      - /home/core/.podman/stacktek/ai-agents/openclaw/data:/app/openclaw-data:Z
+      - /home/core/.openclaw:/home/node/.openclaw
+      - /home/core/.openclaw/workspace:/home/node/.openclaw/workspace
+      - /home/core/.openclaw-auth-profile-secrets:/home/node/.config/openclaw
+    cap_drop:
+      - NET_RAW
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "18789:18789"
+      - "18790:18790"
+    init: true
+    restart: unless-stopped
+    command:
+      [
+        "node",
+        "dist/index.js",
+        "gateway",
+        "--bind",
+        "lan",
+        "--port",
+        "18789",
+      ]
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:18789/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  openclaw-cli:
+    image: ghcr.io/openclaw/openclaw:latest
+    network_mode: "service:openclaw-gateway"
+    env_file:
+      - path: .env
+        required: false
+    cap_drop:
+      - NET_RAW
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      HOME: /home/node
+      OPENCLAW_HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_STATE_DIR: /home/node/.openclaw
+      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+      OPENCLAW_CONFIG_DIR: /home/node/.openclaw
+      OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+      BROWSER: echo
+      TZ: UTC
+    volumes:
+      - /home/core/.openclaw:/home/node/.openclaw
+      - /home/core/.openclaw/workspace:/home/node/.openclaw/workspace
+      - /home/core/.openclaw-auth-profile-secrets:/home/node/.config/openclaw
+    stdin_open: true
+    tty: true
+    init: true
+    entrypoint: ["node", "dist/index.js"]
+    depends_on:
+      - openclaw-gateway
