@@ -13,6 +13,11 @@ Fails:
 Update Script:
 -------------
 * Create an update script in /opt/
+cd ~/.podman/stacktek
+podman-compose down
+git pull
+podman-compose pull
+podman-compose up -d --force-recreate
 
 Troublshooting:
 --------------
