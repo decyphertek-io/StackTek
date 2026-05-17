@@ -1,18 +1,69 @@
-# Flowise — long-running runtime for this workspace (joins StackTek bridge).
-networks:
-  stacktek_net:
-    name: stacktek_stacktek
-    external: true
+version: '3.1'
 
 services:
-  flowise:
-    image: docker.io/flowiseai/flowise:latest
-    container_name: stacktek-flowise
-    networks: [stacktek_net]
-    restart: unless-stopped
-    expose:
-      - "3000"
-    environment:
-      - PORT=3000
-    volumes:
-      - /home/core/.podman/stacktek/ai-agents/flowise/data:/root/.flowise:Z
+    postgres:
+        image: postgres:16-alpine
+        restart: always
+        environment:
+            - POSTGRES_DB=${DATABASE_NAME}
+            - POSTGRES_USER=${DATABASE_USER}
+            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+        volumes:
+            - ./data-postgres:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    flowise:
+        image: flowiseai/flowise:latest
+        restart: always
+        depends_on:
+            postgres:
+                condition: service_healthy
+        environment:
+            - PORT=${PORT}
+
+            # DATABASE
+            - DATABASE_TYPE=${DATABASE_TYPE}
+            - DATABASE_HOST=${DATABASE_HOST}
+            - DATABASE_PORT=${DATABASE_PORT}
+            - DATABASE_NAME=${DATABASE_NAME}
+            - DATABASE_USER=${DATABASE_USER}
+            - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+
+            # LOGGING
+            - LOG_LEVEL=${LOG_LEVEL}
+
+            # SETTINGS
+            - CORS_ORIGINS=${CORS_ORIGINS}
+            - FLOWISE_FILE_SIZE_LIMIT=${FLOWISE_FILE_SIZE_LIMIT}
+            - DISABLE_FLOWISE_TELEMETRY=${DISABLE_FLOWISE_TELEMETRY}
+
+            # AUTH
+            - APP_URL=${APP_URL}
+            - JWT_AUTH_TOKEN_SECRET=${JWT_AUTH_TOKEN_SECRET}
+            - JWT_REFRESH_TOKEN_SECRET=${JWT_REFRESH_TOKEN_SECRET}
+            - JWT_ISSUER=${JWT_ISSUER}
+            - JWT_AUDIENCE=${JWT_AUDIENCE}
+            - JWT_TOKEN_EXPIRY_IN_MINUTES=${JWT_TOKEN_EXPIRY_IN_MINUTES}
+            - JWT_REFRESH_TOKEN_EXPIRY_IN_MINUTES=${JWT_REFRESH_TOKEN_EXPIRY_IN_MINUTES}
+            - EXPRESS_SESSION_SECRET=${EXPRESS_SESSION_SECRET}
+            - TOKEN_HASH_SECRET=${TOKEN_HASH_SECRET}
+
+            # SECURITY
+            - HTTP_SECURITY_CHECK=${HTTP_SECURITY_CHECK}
+            - PATH_TRAVERSAL_SAFETY=${PATH_TRAVERSAL_SAFETY}
+            - TRUST_PROXY=${TRUST_PROXY}
+        ports:
+            - '${PORT}:${PORT}'
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:${PORT}/api/v1/ping']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+        volumes:
+            - ~/.flowise:/root/.flowise
+        entrypoint: /bin/sh -c "sleep 3; flowise start"

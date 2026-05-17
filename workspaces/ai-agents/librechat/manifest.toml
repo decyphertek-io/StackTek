@@ -1,0 +1,7 @@
+name = "librechat"
+display_name = "LibreChat"
+description = "Open-source chat UI supporting multiple AI providers with RAG, agents, and search."
+category = "ai"
+icon = "librechat"
+web_port = 3080
+data_path = "/app"

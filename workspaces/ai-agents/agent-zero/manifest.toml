@@ -1,7 +1,7 @@
-name = "zero-agent"
-display_name = "Zero Agent"
+name = "Agent Zero"
+display_name = "Agent Zero"
 description = "Local-first AI agent runtime with tool-use and web access."
 category = "ai"
-icon = "zero-agent"
+icon = "agent-zero"
 web_port = 3000
 data_path = "/data"
