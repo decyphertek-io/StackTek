@@ -1,0 +1,80 @@
+# StackTek edge: TLS termination + OWASP CRS WAF.
+# Single upstream — every request (SPA, API, WS) goes to the stacktek
+# Rust binary on the internal podman bridge. stacktek serves its own
+# static SPA from /static and exposes /api/* + /ws/*. VNC WebSocket
+# and web-app proxy are handled entirely within the stacktek binary.
+
+{
+    # Disable Caddy's automatic public-CA issuance — we use our own self-signed
+    # cert regenerated on every AMI launch.
+    auto_https off
+
+    # Coraza WAF is registered as a directive earlier than reverse_proxy so it
+    # can short-circuit malicious requests before they hit the upstream.
+    order coraza_waf before reverse_proxy
+}
+
+:443 {
+    tls /certs/cert.pem /certs/key.pem
+
+    encode zstd gzip
+
+    # WebSocket paths bypass Coraza — Coraza wraps ResponseWriter and removes
+    # http.Hijacker, which Caddy's reverse_proxy requires for protocol upgrades.
+    @websocket path /ws/*
+    handle @websocket {
+        reverse_proxy https://stacktek:8443 {
+            header_up X-Forwarded-Proto https
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Real-IP         {remote_host}
+            transport http {
+                tls
+                tls_insecure_skip_verify
+                versions 1.1
+            }
+        }
+    }
+
+    # All other requests go through Coraza WAF — OWASP Core Rule Set, paranoia level 1.
+    handle {
+        coraza_waf {
+            load_owasp_crs
+            directives `
+                Include @coraza.conf-recommended
+                Include @crs-setup.conf.example
+                Include @owasp_crs/*.conf
+                SecRuleEngine On
+                SecRequestBodyAccess On
+                SecResponseBodyAccess Off
+            `
+        }
+
+        reverse_proxy https://stacktek:8443 {
+            header_up X-Forwarded-Proto https
+            header_up X-Forwarded-For   {remote_host}
+            header_up X-Real-IP         {remote_host}
+            transport http {
+                tls
+                tls_insecure_skip_verify
+                versions 1.1
+            }
+        }
+    }
+
+    # Hardening response headers. X-Frame-Options is SAMEORIGIN (not DENY)
+    # because the stacktek SPA iframes /ws/vnc/* and /apps/* on its own
+    # origin to render desktops and web apps inline.
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options    "nosniff"
+        X-Frame-Options           "SAMEORIGIN"
+        Referrer-Policy           "no-referrer"
+        -Server
+    }
+
+    log {
+        output stdout
+        format console
+        level DEBUG
+    }
+}
