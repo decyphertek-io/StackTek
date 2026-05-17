@@ -1,7 +1,7 @@
 name = "signal"
 display_name = "Signal"
 description = "Debian desktop running Signal Desktop over TigerVNC."
-category = "desktop"
+category = "app"
 icon = "signal"
 vnc_port = 5901
 audio_port = 4713

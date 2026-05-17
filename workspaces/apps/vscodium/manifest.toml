@@ -1,7 +1,7 @@
 name = "vscodium"
 display_name = "VSCodium"
 description = "Debian desktop running VSCodium (codium) over TigerVNC."
-category = "desktop"
+category = "app"
 icon = "vscodium"
 vnc_port = 5901
 audio_port = 4713

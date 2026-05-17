@@ -1,7 +1,7 @@
 name = "keepassxc"
 display_name = "KeePassXC"
 description = "Debian desktop running KeePassXC password manager over TigerVNC."
-category = "desktop"
+category = "app"
 icon = "keepassxc"
 vnc_port = 5901
 audio_port = 4713

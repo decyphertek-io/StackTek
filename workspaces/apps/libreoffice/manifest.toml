@@ -1,7 +1,7 @@
 name = "libreoffice"
 display_name = "LibreOffice"
 description = "Debian desktop with LibreOffice Writer, Calc, and Impress over TigerVNC."
-category = "desktop"
+category = "app"
 icon = "libreoffice"
 vnc_port = 5901
 audio_port = 4713

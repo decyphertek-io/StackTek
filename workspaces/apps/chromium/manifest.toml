@@ -1,7 +1,7 @@
 name = "chromium"
 display_name = "Chromium"
 description = "Debian desktop with Chromium browser via TigerVNC."
-category = "desktop"
+category = "app"
 icon = "chromium"
 vnc_port = 5901
 audio_port = 4713
