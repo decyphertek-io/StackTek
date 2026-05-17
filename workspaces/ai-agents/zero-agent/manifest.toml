@@ -5,4 +5,3 @@ category = "ai"
 icon = "zero-agent"
 web_port = 3000
 data_path = "/data"
-coming_soon = true

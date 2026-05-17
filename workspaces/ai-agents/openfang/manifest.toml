@@ -5,4 +5,3 @@ category = "ai"
 icon = "openfang"
 web_port = 8080
 data_path = "/data"
-coming_soon = true
