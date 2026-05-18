@@ -1,7 +1,7 @@
 name = "chromium"
 display_name = "Chromium"
 description = "Chromium browser delivered as a headless web app."
-category = "web"
+category = "app"
 icon = "chromium"
 web_port = 3000
 data_path = "/config"

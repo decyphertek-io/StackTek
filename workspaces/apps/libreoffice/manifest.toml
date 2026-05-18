@@ -1,7 +1,7 @@
 name = "libreoffice"
 display_name = "LibreOffice"
 description = "LibreOffice suite delivered as a headless web app."
-category = "web"
+category = "app"
 icon = "libreoffice"
 web_port = 3000
 data_path = "/config"

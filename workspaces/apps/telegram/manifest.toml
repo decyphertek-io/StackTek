@@ -1,7 +1,7 @@
 name = "telegram"
 display_name = "Telegram"
 description = "Telegram Desktop delivered as a headless web app."
-category = "web"
+category = "app"
 icon = "telegram"
 web_port = 3000
 data_path = "/config"

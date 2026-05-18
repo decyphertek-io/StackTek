@@ -1,7 +1,7 @@
 name = "thunderbird"
 display_name = "Thunderbird"
 description = "Mozilla Thunderbird delivered as a headless web app."
-category = "web"
+category = "app"
 icon = "thunderbird"
 web_port = 3000
 data_path = "/config"

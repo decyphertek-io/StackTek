@@ -1,7 +1,7 @@
 name = "vscodium"
 display_name = "VSCodium"
 description = "VSCodium delivered as a headless web app."
-category = "web"
+category = "app"
 icon = "vscodium"
 web_port = 3000
 data_path = "/config"
