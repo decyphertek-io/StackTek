@@ -10,7 +10,7 @@ on:
 
 env:
   IMAGE_STACKTEK: ghcr.io/decyphertek-io/stacktek/stacktek
-  IMAGE_CADDY: ghcr.io/decyphertek-io/stacktek/stacktek-caddy
+  IMAGE_CADDY: ghcr.io/decyphertek-io/stacktek/caddy-coraza
 
 jobs:
   images:
