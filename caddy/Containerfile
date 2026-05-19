@@ -1,15 +1,14 @@
-# caddy/Containerfile — same as yours, Chainguard instead of docker.io/caddy
-FROM cgr.dev/chainguard/go:latest AS builder
-RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
-ENV CGO_ENABLED=0
+FROM docker.io/library/caddy:2-builder AS builder
+
 RUN xcaddy build \
     --with github.com/corazawaf/coraza-caddy/v2 \
-    --with github.com/corazawaf/coraza-coreruleset \
-    --output /usr/bin/caddy
+    --with github.com/corazawaf/coraza-coreruleset
 
-FROM cgr.dev/chainguard/static:latest
-LABEL org.opencontainers.image.title="StackTek Edge (Caddy + Coraza)"
+FROM docker.io/library/caddy:2
+
+LABEL org.opencontainers.image.title="Caddy + Coraza" \
+      org.opencontainers.image.licenses="Apache-2.0"
+
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+
 EXPOSE 443
-ENTRYPOINT ["/usr/bin/caddy"]
-CMD ["run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
