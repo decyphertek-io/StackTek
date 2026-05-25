@@ -8,8 +8,9 @@ RUN pacman-key --init >/dev/null 2>&1 || true \
     && pacman -Su --noconfirm \
     && pacman -S --noconfirm --needed \
         sudo ca-certificates curl wget dbus gnupg \
-        tigervnc xfce4 xfce4-terminal xfce4-goodies \
-        pipewire pipewire-pulse wireplumber libpulse \
+        tigervnc xfce4 xfce4-terminal mousepad ristretto \
+        xfce4-whiskermenu-plugin xfce4-clipman-plugin \
+        pipewire pipewire-pulse wireplumber libpulse pulseaudio-utils \
         firefox nano vim git \
         iproute2 inetutils procps-ng \
     && pacman -Scc --noconfirm

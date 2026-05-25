@@ -9,6 +9,7 @@ Fails:
 * Chromium ( Build Succeeds, yet connection fails )
 * Openclaw ( Build Fails )
 * Deleting & Stopping Sessions 
+* Sound over WebRTC isnt working 
 
 Update Script:
 -------------
