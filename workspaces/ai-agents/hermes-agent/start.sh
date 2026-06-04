@@ -13,6 +13,8 @@ DISCORD_BOT_TOKEN=
 EOF
 ) > /home/core/stacktek/workspaces/ai-agents/hermes-agent/.env
 
+mkdir -p /home/core/.hermes
+cp /home/core/stacktek/workspaces/ai-agents/hermes-agent/.env /home/core/.hermes/.env
 cd /home/core/stacktek/workspaces/ai-agents/hermes-agent/
 podman-compose up -d
 exit 0
