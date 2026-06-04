@@ -25,3 +25,11 @@ podman-compose up -d --force-recreate
 Troublshooting:
 --------------
 podman logs stacktek 2>&1 | cat | grep -i "openclaw\|arch\|compose\|chromium\|kali\|failed\|error" | tail -50
+
+Fixes:
+------
+* Hermes Agent is copying the APi key incorrectly with 200 added before and after?
+podman unshare bash
+cd /home/core/.hermes
+vi .env
+exit
