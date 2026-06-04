@@ -37,3 +37,5 @@ vi .env
 exit
 
 * Hermes Kanban not working? How do I enable this feature?
+* I just told AI , its already installed and then it started working? 
+* Maybe some models just dont know how to navigate yet?
