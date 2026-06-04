@@ -10,6 +10,8 @@ Fails:
 * Openclaw ( Build Fails )
 * Deleting & Stopping Sessions 
 * Sound over WebRTC isnt working 
+* Hermes agent Dashboard produces an  Error: Error code: 401 - {'error': {'message': 'Missing Authentication header', 'code': 401}}                                                                                                                                            
+                                                                                                                                                                
 
 Update Script:
 -------------
