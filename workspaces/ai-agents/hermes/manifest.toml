@@ -3,5 +3,5 @@ display_name = "Hermes Agent"
 description = "Autonomous AI agent by Nous Research with web dashboard, multi-profile gateway, and full CLI/TUI interface."
 category = "ai"
 icon = "hermes"
-web_port = 8642
+web_port = 9119
 data_path = "/opt/data"
