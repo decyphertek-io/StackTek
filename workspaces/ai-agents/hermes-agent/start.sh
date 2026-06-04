@@ -11,8 +11,8 @@ API_SERVER_KEY=${API_SERVER_KEY}
 TELEGRAM_BOT_TOKEN=
 DISCORD_BOT_TOKEN=
 EOF
-) > /home/adminotaur/Documents/git/stacktek/workspaces/ai-agents/hermes/.env
+) > /home/adminotaur/Documents/git/stacktek/workspaces/ai-agents/hermes-agent/.env
 
-cd /home/adminotaur/Documents/git/stacktek/workspaces/ai-agents/hermes/
+cd /home/adminotaur/Documents/git/stacktek/workspaces/ai-agents/hermes-agent/
 podman-compose up -d
 exit 0
