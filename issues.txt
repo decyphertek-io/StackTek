@@ -27,6 +27,7 @@ podman logs stacktek 2>&1 | cat | grep -i "openclaw\|arch\|compose\|chromium\|ka
 Fixes:
 ------
 * Hermes Agent is copying the APi key incorrectly with [200~ added before and after?
+* Make sure to not use keyboard past command , just right click and paste.
 # Check is the api key is malformed.
 podman exec hermes cat /opt/data/.env
 # If so then fix it this way.
