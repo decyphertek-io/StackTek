@@ -16,10 +16,11 @@ Under the hood, StackTek runs on Fedora CoreOS on AWS using rootless Podman, kee
 
 ## Workspaces
 
-| Category | Examples |
+| Category | Workspaces |
 |---|---|
 | Web Desktops | Debian, Kali, Ubuntu, Rocky, Arch, ParrotSec (XFCE + TigerVNC) |
-| AI Agents | OpenClaw, Flowise, OpenFang, Zero Agent |
+| AI Agents | OpenWebUI, Hermes, Paperclip, TradingAgents, Fincept Terminal, Space Agent, HIA, CrewAI, OpenRAG, OpenBrowser, Mike OSS, BrowserOS, Open Notebook, XFormAI, OpenClaw, Flowise, LibreChat, Agent Zero, OpenFang |
+| CyberLab | Vulhub CVE Lab, WebGoat, Mutillidae, DVWA |
 | Apps | Chromium, LibreOffice, VSCodium, Signal, Telegram, Thunderbird, KeePassXC |
 
 ## Quick Start
