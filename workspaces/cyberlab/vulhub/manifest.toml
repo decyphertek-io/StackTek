@@ -1,0 +1,7 @@
+name = "vulhub"
+display_name = "Vulhub CVE Lab"
+description = "Pre-built vulnerable Docker environments for security research. Set VULHUB_CVE to launch a specific environment (e.g. spring/CVE-2022-22947)."
+category = "cyberlab"
+icon = "vulhub"
+web_port = 7681
+data_path = "/data"

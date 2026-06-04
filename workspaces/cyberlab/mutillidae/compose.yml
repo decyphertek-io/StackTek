@@ -1,0 +1,78 @@
+# OWASP Mutillidae II — deliberately vulnerable web app for security training.
+# Web app:   http://<host>:80
+# DB admin:  http://<host>:81
+# LDAP admin: http://<host>:82
+
+services:
+  database:
+    image: docker.io/webpwnized/mutillidae:database
+    container_name: mutillidae-db
+    restart: unless-stopped
+    networks:
+      - mutillidae-net
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  database_admin:
+    image: docker.io/webpwnized/mutillidae:database_admin
+    container_name: mutillidae-db-admin
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    expose:
+      - "80"
+    ports:
+      - "81"
+    networks:
+      - mutillidae-net
+
+  www:
+    image: docker.io/webpwnized/mutillidae:www
+    container_name: mutillidae-www
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+      directory:
+        condition: service_started
+    expose:
+      - "80"
+      - "443"
+    ports:
+      - "80"
+      - "443"
+    networks:
+      - mutillidae-net
+      - mutillidae-ldap
+
+  directory:
+    image: docker.io/webpwnized/mutillidae:ldap
+    container_name: mutillidae-ldap
+    restart: unless-stopped
+    expose:
+      - "389"
+    ports:
+      - "389"
+    networks:
+      - mutillidae-ldap
+
+  directory_admin:
+    image: docker.io/webpwnized/mutillidae:ldap_admin
+    container_name: mutillidae-ldap-admin
+    restart: unless-stopped
+    depends_on:
+      - directory
+    expose:
+      - "80"
+    ports:
+      - "82"
+    networks:
+      - mutillidae-ldap
+
+networks:
+  mutillidae-net:
+  mutillidae-ldap:

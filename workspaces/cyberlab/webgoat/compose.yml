@@ -1,0 +1,25 @@
+# OWASP WebGoat + WebWolf — deliberately insecure web app for security training.
+# WebGoat lessons: http://<host>:8080/WebGoat
+# WebWolf:         http://<host>:9090/WebWolf
+
+services:
+  webgoat:
+    image: webgoat/webgoat:latest
+    container_name: webgoat
+    restart: unless-stopped
+    environment:
+      WEBGOAT_PORT: "8080"
+      WEBWOLF_PORT: "9090"
+    expose:
+      - "8080"
+      - "9090"
+    ports:
+      - "8080"
+      - "9090"
+    init: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/WebGoat/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s

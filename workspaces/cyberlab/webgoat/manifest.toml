@@ -1,0 +1,6 @@
+name = "webgoat"
+display_name = "WebGoat"
+description = "OWASP deliberately insecure web application for security training. Includes WebGoat lessons and WebWolf attacker tools."
+category = "cyberlab"
+icon = "webgoat"
+web_port = 8080

@@ -2,7 +2,7 @@
 
 Secure browser-native workspace platform. Launch web desktops, AI agents, and containerized apps — all accessible through your browser over TLS with no VPN required.
 
-> **This project is under active development. Many features are still being implemented and things may break.**
+> **This project is under active dev. Many features are still being implemented, many features are not working, and it may break.**
 
 ## Overview
 
@@ -64,4 +64,4 @@ The compiled StackTek binary and container image are proprietary and covered by 
 
 ## Required Notice
 
-Copyright Decyphertek IO (https://decyphertek.io)
+Copyright Decyphertek LLC (https://decyphertek.io)

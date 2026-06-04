@@ -1,0 +1,6 @@
+name = "mutillidae"
+display_name = "Mutillidae"
+description = "OWASP Mutillidae II — free, open-source deliberately vulnerable web application for security training and CTFs."
+category = "cyberlab"
+icon = "mutillidae"
+web_port = 80
