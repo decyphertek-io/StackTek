@@ -1,0 +1,7 @@
+name = "tradingagents"
+display_name = "TradingAgents"
+description = "Multi-agent LLM financial trading framework by Tauric Research - collaborative market analysis and trading decisions."
+category = "ai"
+icon = "tradingagents"
+web_port = 7681
+data_path = "/home/tradingagents/.tradingagents"

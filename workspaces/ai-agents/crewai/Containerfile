@@ -1,0 +1,45 @@
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates git tini \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG TTYD_VERSION=1.7.7
+RUN arch=$(uname -m) && \
+    case "$arch" in \
+      x86_64) ttyd_arch="x86_64" ;; \
+      aarch64|arm64) ttyd_arch="aarch64" ;; \
+      *) echo "Unsupported arch: $arch"; exit 1 ;; \
+    esac && \
+    curl -sL "https://github.com/tsl0922/ttyd/releases/download/${TTYD_VERSION}/ttyd.${ttyd_arch}" \
+      -o /usr/local/bin/ttyd && \
+    chmod +x /usr/local/bin/ttyd
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+ENV PATH="/root/.local/bin:$PATH" \
+    UV_TOOL_DIR="/root/.local/share/uv/tools" \
+    UV_CACHE_DIR="/root/.cache/uv"
+
+RUN uv tool install crewai && uv tool update-shell
+
+RUN mkdir -p /workspace
+
+WORKDIR /workspace
+
+COPY <<-'EOF' /usr/local/bin/entrypoint.sh
+#!/bin/sh
+set -e
+
+cd /workspace
+
+exec ttyd -p 7681 -c "admin:${TTYD_PASSWORD:-crewai}" /bin/bash -l
+EOF
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+VOLUME /workspace
+
+EXPOSE 7681
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/usr/local/bin/entrypoint.sh"]

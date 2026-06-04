@@ -1,0 +1,7 @@
+name = "openrag"
+display_name = "OpenRAG"
+description = "Lightweight, modular, extensible RAG framework for experimenting with advanced retrieval-augmented generation techniques."
+category = "ai"
+icon = "openrag"
+web_port = 8080
+data_path = "/app/model_weights"

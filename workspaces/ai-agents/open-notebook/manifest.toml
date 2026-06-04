@@ -1,0 +1,6 @@
+name = "open-notebook"
+display_name = "Open Notebook"
+description = "Open source implementation of Notebook LM with flexibility and advanced features for AI-powered research."
+category = "ai"
+icon = "notebook"
+coming_soon = true

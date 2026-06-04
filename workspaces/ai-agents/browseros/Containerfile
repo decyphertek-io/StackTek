@@ -1,0 +1,73 @@
+FROM docker.io/library/debian:13-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        sudo ca-certificates curl wget gnupg locales \
+        dbus dbus-x11 \
+        tigervnc-standalone-server tigervnc-common \
+        openbox obconf xfonts-base \
+        libfuse2 fuse3 \
+        nano vim \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ARG BROWSEROS_URL=https://files.browseros.com/download/BrowserOS.AppImage
+
+RUN wget -q "${BROWSEROS_URL}" -O /opt/BrowserOS.AppImage \
+    && chmod +x /opt/BrowserOS.AppImage
+
+RUN cd /opt && ./BrowserOS.AppImage --appimage-extract \
+    && mv /opt/squashfs-root /opt/browseros \
+    && rm /opt/BrowserOS.AppImage
+
+RUN useradd -m -s /bin/bash -u 1000 -G sudo,video adminotaur \
+    && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
+    && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
+                /home/adminotaur/.config/openbox /home/adminotaur/data
+
+RUN printf '#!/bin/sh\n\
+export XKL_XMODMAP_DISABLE=1\n\
+unset SESSION_MANAGER\n\
+unset DBUS_SESSION_BUS_ADDRESS\n\
+\n\
+openbox --sm-disable &\n\
+\n\
+if [ -x /opt/browseros/AppRun ]; then\n\
+  exec /opt/browseros/AppRun\n\
+elif [ -x /opt/browseros/browseros ]; then\n\
+  exec /opt/browseros/browseros\n\
+else\n\
+  exec /opt/browseros/*.AppDir 2>/dev/null || true\n\
+fi\n\
+' > /home/adminotaur/.vnc/xstartup
+
+RUN printf '#!/bin/sh\n\
+export XKL_XMODMAP_DISABLE=1\n\
+unset SESSION_MANAGER\n\
+unset DBUS_SESSION_BUS_ADDRESS\n\
+\n\
+openbox --sm-disable &\n\
+\n\
+if [ -x /opt/browseros/AppRun ]; then\n\
+  exec /opt/browseros/AppRun\n\
+elif [ -x /opt/browseros/browseros ]; then\n\
+  exec /opt/browseros/browseros\n\
+else\n\
+  exec /opt/browseros/*.AppDir 2>/dev/null || true\n\
+fi\n\
+' > /home/adminotaur/.config/tigervnc/xstartup
+
+RUN chmod +x /home/adminotaur/.vnc/xstartup /home/adminotaur/.config/tigervnc/xstartup
+
+RUN printf 'session=\ngeometry=1920x1080\ndepth=24\nlocalhost=no\n' \
+    > /home/adminotaur/.vnc/config \
+    && chown -R adminotaur:adminotaur /home/adminotaur
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 5901
+ENV USER=adminotaur HOME=/home/adminotaur DISPLAY=:1
+CMD ["/start.sh"]

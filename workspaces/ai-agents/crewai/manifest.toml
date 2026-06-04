@@ -1,0 +1,7 @@
+name = "crewai"
+display_name = "CrewAI"
+description = "Framework for orchestrating role-based collaborative AI agent crews. CLI accessible via web terminal."
+category = "ai"
+icon = "crewai"
+web_port = 7681
+data_path = "/workspace"

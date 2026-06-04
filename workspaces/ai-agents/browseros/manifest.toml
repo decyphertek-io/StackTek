@@ -1,0 +1,7 @@
+name = "browseros"
+display_name = "BrowserOS"
+description = "Browser-based operating system and AI agent platform. Desktop workspace with TigerVNC."
+category = "ai"
+icon = "browseros"
+vnc_port = 5901
+data_path = "/home/adminotaur/data"

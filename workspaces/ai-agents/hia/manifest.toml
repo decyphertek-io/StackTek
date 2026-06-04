@@ -1,0 +1,6 @@
+name = "hia"
+display_name = "HIA - Health Insights Agent"
+description = "AI agent to analyze blood reports and provide detailed health insights with RAG-powered Q&A."
+category = "ai"
+icon = "hia"
+web_port = 8501

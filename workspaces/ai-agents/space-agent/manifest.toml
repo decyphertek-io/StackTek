@@ -1,0 +1,7 @@
+name = "space-agent"
+display_name = "Space Agent"
+description = "The agent that reshapes the interface - AI agent that can build tools, widgets, and workflows into the running workspace."
+category = "ai"
+icon = "space"
+web_port = 3000
+data_path = "/opt/space-agent/data"

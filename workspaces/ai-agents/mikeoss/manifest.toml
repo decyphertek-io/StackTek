@@ -1,0 +1,7 @@
+name = "mikeoss"
+display_name = "Mike OSS"
+description = "OSS AI legal document assistant with document analysis, chat, and multi-model LLM support."
+category = "ai"
+icon = "mikeoss"
+web_port = 3000
+data_path = "/app/data"

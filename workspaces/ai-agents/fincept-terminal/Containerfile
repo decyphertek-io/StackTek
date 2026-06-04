@@ -1,0 +1,136 @@
+FROM debian:trixie-slim AS builder
+
+ARG TARGETARCH
+ARG QT_VERSION=6.8.3
+ARG CMAKE_VERSION=3.27.7
+ARG FINCEPT_VERSION=v4.0.3
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates curl wget git ninja-build g++-13 gcc-13 \
+    python3 python3-pip python3-venv pkg-config file libssl-dev \
+    libgl1-mesa-dev libglu1-mesa-dev libxkbcommon-dev libxkbcommon-x11-dev \
+    libxcb1-dev libxcb-cursor-dev libxcb-icccm4-dev libxcb-image0-dev \
+    libxcb-keysyms1-dev libxcb-randr0-dev libxcb-render-util0-dev \
+    libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev \
+    libxcb-xinerama0-dev libxcb-xkb-dev libxcb-util-dev \
+    libfontconfig1-dev libfreetype6-dev libdbus-1-dev \
+    libglib2.0-0t64 libicu-dev libdouble-conversion3 libpcre2-16-0 \
+    libpulse-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    libasound2-dev libopenblas-dev \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 60 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 60 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN arch="${TARGETARCH}"; \
+    if [ -z "$arch" ]; then arch=$(dpkg --print-architecture | sed 's/amd64/x86_64/;s/arm64/aarch64/'); fi; \
+    case "$arch" in \
+      amd64|x86_64) \
+        QT_ARCH_AQT="linux_gcc_64"; QT_ARCH_PATH="gcc_64"; \
+        CMAKE_ASSET="cmake-${CMAKE_VERSION}-linux-x86_64.sh"; ;; \
+      arm64|aarch64) \
+        QT_ARCH_AQT="linux_gcc_arm64"; QT_ARCH_PATH="gcc_arm64"; \
+        CMAKE_ASSET="cmake-${CMAKE_VERSION}-linux-aarch64.sh"; ;; \
+    esac; \
+    echo "$QT_ARCH_AQT" > /tmp/qt_arch_aqt; \
+    echo "$QT_ARCH_PATH" > /tmp/qt_arch_path; \
+    echo "$CMAKE_ASSET" > /tmp/cmake_asset
+
+RUN CMAKE_ASSET=$(cat /tmp/cmake_asset) && \
+    wget -q "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/${CMAKE_ASSET}" -O /tmp/cmake.sh && \
+    chmod +x /tmp/cmake.sh && /tmp/cmake.sh --skip-license --prefix=/usr/local && \
+    rm /tmp/cmake.sh
+
+ENV QT_ROOT=/opt/Qt
+RUN pip3 install --break-system-packages --no-cache-dir aqtinstall && \
+    for attempt in 1 2 3 4 5; do \
+      python3 -m aqt install-qt linux desktop "${QT_VERSION}" "$(cat /tmp/qt_arch_aqt)" \
+        --outputdir "${QT_ROOT}" --modules qtcharts qtwebsockets qtmultimedia \
+      && break || { echo "aqtinstall attempt ${attempt} failed"; sleep 5; }; done
+
+WORKDIR /src
+RUN git clone --depth 1 --branch ${FINCEPT_VERSION} \
+    https://github.com/Fincept-Corporation/FinceptTerminal.git .
+
+WORKDIR /src/fincept-qt
+RUN QT_ARCH_PATH=$(cat /tmp/qt_arch_path) && \
+    CMAKE_PREFIX_PATH="${QT_ROOT}/${QT_VERSION}/${QT_ARCH_PATH}" && \
+    export PATH="${CMAKE_PREFIX_PATH}/bin:${PATH}" && \
+    cmake -B build -G Ninja \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}" \
+      -DOPENSSL_ROOT_DIR=/usr && \
+    cmake --build build --parallel 4 && \
+    strip build/FinceptTerminal
+
+FROM debian:trixie-slim AS runtime
+
+ARG TARGETARCH
+ARG QT_VERSION=6.8.3
+ARG TTYD_VERSION=1.7.7
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates python3 python3-pip python3-venv curl \
+    libegl1 libgl1 libglx-mesa0 libglu1-mesa \
+    libxcb1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+    libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-sync1 \
+    libxcb-xfixes0 libxcb-xinerama0 libxcb-xkb1 libxcb-util1 libxcb-glx0 \
+    libxkbcommon0 libxkbcommon-x11-0 libglib2.0-0t64 libdbus-1-3 \
+    libfontconfig1 libfreetype6 libx11-6 libx11-xcb1 glib-networking \
+    libgssapi-krb5-2 libpulse0 libasound2t64 libpipewire-0.3-0t64 \
+    libwayland-client0 libwayland-cursor0 libwayland-egl1 libdecor-0-0 \
+    libopenblas0 tini \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN arch=$(uname -m) && \
+    case "$arch" in \
+      x86_64) ttyd_arch="x86_64" ;; \
+      aarch64|arm64) ttyd_arch="aarch64" ;; \
+    esac && \
+    curl -sL "https://github.com/tsl0922/ttyd/releases/download/${TTYD_VERSION}/ttyd.${ttyd_arch}" \
+      -o /usr/local/bin/ttyd && \
+    chmod +x /usr/local/bin/ttyd
+
+RUN set -eux; \
+    case "${TARGETARCH}" in amd64|x86_64) echo "gcc_64" > /etc/qt_arch ;; arm64|aarch64) echo "gcc_arm64" > /etc/qt_arch ;; esac
+
+ENV QT_ROOT=/opt/Qt
+COPY --from=builder /opt/Qt /opt/Qt
+
+WORKDIR /app
+COPY --from=builder /src/fincept-qt/build/FinceptTerminal ./FinceptTerminal
+COPY --from=builder /src/fincept-qt/scripts ./scripts
+COPY --from=builder /src/fincept-qt/resources ./resources
+COPY --from=builder /src/fincept-qt/build/_deps/qgeoview-build/lib/ /usr/local/lib/
+RUN ldconfig && chmod +x ./FinceptTerminal
+
+RUN { \
+      echo '#!/bin/sh'; \
+      echo 'QT_ARCH="$(cat /etc/qt_arch)"'; \
+      echo 'QT_PREFIX="${QT_ROOT}/'"${QT_VERSION}"'/${QT_ARCH}"'; \
+      echo 'export LD_LIBRARY_PATH="${QT_PREFIX}/lib:/usr/local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"'; \
+      echo 'export QT_PLUGIN_PATH="${QT_PREFIX}/plugins"'; \
+      echo 'export QT_QPA_PLATFORM_PLUGIN_PATH="${QT_PREFIX}/plugins/platforms"'; \
+      echo 'echo "Fincept Terminal ${FINCEPT_VERSION}"'; \
+      echo 'echo "NOTE: GUI requires X11 display. Use CLI tools via this terminal."'; \
+      echo 'echo ""'; \
+      echo 'exec /bin/bash "$@"'; \
+    } > /usr/local/bin/entrypoint.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh
+
+RUN useradd --create-home fincept && \
+    install -d -m 0755 -o fincept -g fincept /home/fincept/.fincept
+USER fincept
+WORKDIR /home/fincept
+
+EXPOSE 7681
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["ttyd", "-p", "7681", "-c", "admin:${TTYD_PASSWORD:-fincept}", "/usr/local/bin/entrypoint.sh"]

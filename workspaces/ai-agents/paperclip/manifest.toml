@@ -1,0 +1,7 @@
+name = "paperclip"
+display_name = "Paperclip"
+description = "Open-source AI orchestration platform for running agent workflows with governance and scheduling."
+category = "ai"
+icon = "paperclip"
+web_port = 3100
+data_path = "/paperclip"

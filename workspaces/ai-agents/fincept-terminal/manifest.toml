@@ -1,0 +1,7 @@
+name = "fincept-terminal"
+display_name = "Fincept Terminal"
+description = "Professional-grade financial intelligence platform with multi-asset analytics, AI agents, and 100+ data connectors."
+category = "ai"
+icon = "fincept"
+web_port = 7681
+data_path = "/home/fincept/.fincept"

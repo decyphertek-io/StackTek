@@ -1,0 +1,7 @@
+name = "openwebui"
+display_name = "Open WebUI"
+description = "Extensible, feature-rich self-hosted AI platform for LLM interaction supporting Ollama and OpenAI-compatible APIs."
+category = "ai"
+icon = "openwebui"
+web_port = 3000
+data_path = "/app/backend/data"

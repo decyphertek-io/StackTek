@@ -1,0 +1,57 @@
+FROM node:22-bookworm-slim AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+RUN git clone --depth 1 https://github.com/willchen96/mike.git .
+
+RUN npm install --prefix backend && npm install --prefix frontend
+
+RUN npm run build --prefix frontend
+
+FROM node:22-alpine
+
+RUN apk add --no-cache tini curl
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+
+RUN rm -f /app/frontend/.env.local
+
+RUN mkdir -p /app/data
+
+COPY <<-'EOF' /usr/local/bin/entrypoint.sh
+#!/bin/sh
+set -e
+
+if [ -f /app/backend/.env ]; then
+  set -a; . /app/backend/.env; set +a
+fi
+
+echo "Starting Mike OSS backend on port 3001..."
+cd /app/backend && npx tsx src/index.ts &
+BACKEND_PID=$!
+
+sleep 2
+
+echo "Starting Mike OSS frontend on port 3000..."
+cd /app/frontend && exec npx next start -p 3000 &
+FRONTEND_PID=$!
+
+cleanup() {
+  kill $BACKEND_PID $FRONTEND_PID 2>/dev/null
+  wait
+}
+trap cleanup TERM INT
+
+wait
+EOF
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 3000 3001
+
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["/usr/local/bin/entrypoint.sh"]

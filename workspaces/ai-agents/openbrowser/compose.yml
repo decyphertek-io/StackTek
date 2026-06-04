@@ -1,0 +1,25 @@
+services:
+  openbrowser:
+    image: ghcr.io/billy-enrizky/openbrowser-ai:latest
+    container_name: openbrowser
+    restart: unless-stopped
+    environment:
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DEFAULT_LLM_MODEL: gemini-3-flash-preview
+      AUTH_ENABLED: "false"
+      VNC_ENABLED: "false"
+    volumes:
+      - /home/core/.openbrowser:/root/.config/openbrowser
+    expose:
+      - "8000"
+    ports:
+      - "8000"
+    shm_size: 2g
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

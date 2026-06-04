@@ -1,0 +1,6 @@
+name = "openbrowser"
+display_name = "OpenBrowser"
+description = "AI-powered browser automation framework with CodeAgent architecture and CDP communication."
+category = "ai"
+icon = "openbrowser"
+web_port = 8000

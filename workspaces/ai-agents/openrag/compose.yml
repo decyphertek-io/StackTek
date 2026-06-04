@@ -1,0 +1,22 @@
+services:
+  openrag:
+    image: linagora/openrag:latest
+    container_name: openrag
+    restart: unless-stopped
+    environment:
+      APP_PORT: "8080"
+      LOG_LEVEL: INFO
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      RERANKER_ENABLED: "false"
+    volumes:
+      - /home/core/.openrag:/app/model_weights
+    expose:
+      - "8080"
+    ports:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
