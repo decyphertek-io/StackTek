@@ -35,3 +35,5 @@ podman unshare bash
 cd /home/core/.hermes
 vi .env
 exit
+
+* Hermes Kanban not working? How do I enable this feature?
