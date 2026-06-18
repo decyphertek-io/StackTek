@@ -6,7 +6,8 @@ Works:
 
 Not working:
 ------------
-* 
+* Arch Linux
+* Openclaw
 
 Remove:
 -------
