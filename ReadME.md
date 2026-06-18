@@ -61,7 +61,7 @@ podman network rm stacktek 2>/dev/null
 # Remove ONLY stacktek-related named volumes
 podman volume ls -q | grep -iE 'stacktek|dvwa|webgoat|mutillidae|vulhub' | xargs -r podman volume rm
 
-# Prune ONLY dangling layers left behind (doesn't touch tagged images or other projects)
+# Prune 
 podman image prune -f
 
 cd ~
