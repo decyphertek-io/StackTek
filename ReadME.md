@@ -38,13 +38,17 @@ openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
   -subj "/O=decyphertek/CN=stacktek"
 chmod 0644 certs/key.pem certs/cert.pem
 
+# If you need 443 to work on CoreOS or RedHat based Systems with SeLinux
+sudo sh -c 'echo "net.ipv4.ip_unprivileged_port_start=443" >> /etc/sysctl.conf'
+sudo sysctl -p /etc/sysctl.conf
+# Start Stacktek
 podman-compose -f compose.yml up -d
 ```
 
 ### Accessing StackTek
 
-- **Locally:** https://localhost:8443/
-- **Remotely:** https://IP-OF-SERVER:443/
+- **Locally:** https://localhost
+- **Remotely:** https://IP-OF-SERVER
 
 The following directories are created automatically by the clone and used as bind mounts at runtime:
 
