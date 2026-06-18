@@ -41,7 +41,7 @@ services:
         condition: service_healthy
     networks: [stacktek]
     ports:
-      - "8443:443"
+      - "443:443"
     volumes:
       - $HOME/stacktek/caddy/Caddyfile:/etc/caddy/Caddyfile:ro,z
       - $HOME/stacktek/certs:/certs:ro,z
