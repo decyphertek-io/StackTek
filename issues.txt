@@ -1,6 +1,7 @@
 Works:
 ------
-* Nothing
+* Debian Web Desktop
+* 
 
 Not working:
 ------------
@@ -15,6 +16,7 @@ Change:
 * Should say Decyphertek LLC 
 // PolyForm Noncommercial 1.0.0 // decyphertek
 * Remove the giant delete button once its running. 
+* Add Fullscreen button to Web Desktop View
 
 Troublshooting:
 --------------
