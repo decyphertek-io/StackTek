@@ -41,6 +41,11 @@ chmod 0644 certs/key.pem certs/cert.pem
 podman-compose -f compose.yml up -d
 ```
 
+### Accessing StackTek
+
+- **Locally:** https://localhost:8443/
+- **Remotely:** https://IP-OF-SERVER:8443/
+
 The following directories are created automatically by the clone and used as bind mounts at runtime:
 
 - `data/sessions/` — persistent session data
