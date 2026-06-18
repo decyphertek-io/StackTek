@@ -43,9 +43,29 @@ sudo sh -c 'echo "net.ipv4.ip_unprivileged_port_start=443" >> /etc/sysctl.conf'
 sudo sysctl -p /etc/sysctl.conf
 # Start Stacktek
 podman-compose -f compose.yml up -d
+```
+* Optional: Cleanup
+```bash
+# Stop + remove only stacktek containers (orchestrator, caddy, desktops, agents)
+cd /stacktek
+podman-compose -f ~/stacktek/compose.yml down --remove-orphans --volumes 2>/dev/null
+podman ps -a --filter name=stacktek -q | xargs -r podman rm -f
 
-#optional cleanup
+# Remove ONLY stacktek images (orchestrator + caddy + locally-built workspaces)
+podman images -q --filter reference=ghcr.io/decyphertek-io/stacktek | xargs -r podman rmi -f
+podman images -q --filter reference=stacktek | xargs -r podman rmi -f
 
+# Remove ONLY the stacktek network
+podman network rm stacktek 2>/dev/null
+
+# Remove ONLY stacktek-related named volumes
+podman volume ls -q | grep -iE 'stacktek|dvwa|webgoat|mutillidae|vulhub' | xargs -r podman volume rm
+
+# Prune ONLY dangling layers left behind (doesn't touch tagged images or other projects)
+podman image prune -f
+
+cd ~
+rm -rf stacktek
 ```
 
 ### Accessing StackTek
