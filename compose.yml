@@ -14,14 +14,14 @@ services:
       - STACKTEK_BIND=0.0.0.0:8443
       - STACKTEK_WORKSPACES=/workspaces
       - STACKTEK_DATA=/data
-      - STACKTEK_DATA_HOST_DIR=./data
+      - STACKTEK_DATA_HOST_DIR=$HOME/stacktek/data
       - STACKTEK_STATIC=/static
       - STACKTEK_TLS_CERT=/certs/cert.pem
       - STACKTEK_TLS_KEY=/certs/key.pem
     volumes:
-      - ./workspaces:/workspaces:rw,z
-      - ./data:/data:rw
-      - ./certs:/certs:ro,z
+      - $HOME/stacktek/workspaces:/workspaces:rw,z
+      - $HOME/stacktek/data:/data:rw
+      - $HOME/stacktek/certs:/certs:ro,z
       - $HOME/podman/podman.sock:/run/podman.sock:z
     security_opt:
       - "label:disable"
@@ -43,10 +43,10 @@ services:
     ports:
       - "8443:443"
     volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro,z
-      - ./certs:/certs:ro,z
-      - ./caddy/data:/data:rw,Z
-      - ./caddy/config:/config:rw,Z
+      - $HOME/stacktek/caddy/Caddyfile:/etc/caddy/Caddyfile:ro,z
+      - $HOME/stacktek/certs:/certs:ro,z
+      - $HOME/stacktek/caddy/data:/data:rw,Z
+      - $HOME/stacktek/caddy/config:/config:rw,Z
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- --no-check-certificate https://127.0.0.1/api/health >/dev/null || exit 1"]
