@@ -5,25 +5,11 @@ Dumfuck AI ( Thanks GLM 5.2 MAX )
 
 Works:
 ------
-* Debian Web Desktop
-* Arch Linux ( build + keyring hardening, globbed VNC log path )        [fixed 2026-06-18]
-* Kali Linux ( Caddy upstream HTTP/1.1 pin removed )                    [fixed 2026-06-18]
-* Chromium ( Caddy upstream HTTP/1.1 pin removed )                       [fixed 2026-06-18]
-* Openclaw ( manifest web_port 8000 -> 18789, primary_service set )     [fixed 2026-06-18]
-* Deleting & Stopping Sessions ( compose_containers tracked on Session,
-  label-based fallback; delete() removes containers before dropping the
-  session entry )                                                       [fixed 2026-06-18]
-* Desktop audio ( PCM-over-WebSocket -> Web Audio API; first TEXT frame
-  carries format header; browser adapts rate/channels )               [fixed 2026-06-18]
+* Nothing
 
-Previously Failing (resolved 2026-06-18):
------------------------------------------
-* Arch Linux ( Build Fails )               -> pacman-key --populate archlinux; tail -F /home/adminotaur/.vnc/*:1.log
-* Kali Linux ( connection fails )         -> Caddyfile: dropped `versions 1.1` on both transport blocks
-* Chromium ( connection fails )            -> same Caddy fix; verify linuxserver/chromium serves on manifest web_port
-* Openclaw ( Build Fails )                 -> was a port timeout, not a build: web_port now 18789 (the gateway port)
-* Deleting & Stopping Sessions             -> stop/delete now use recorded compose_containers; label fallback added
-* Sound over WebRTC isnt working            -> it was never WebRTC; now PCM-over-WS with format header frame
+Remove:
+-------
+// sessions are in-memory — a stacktek restart logs everyone out. ( I dont this this in the login page )
 
 Update Script:
 -------------
@@ -48,7 +34,6 @@ Fixes:
     nano /home/core/.hermes/.env   (nano strips the bracket markers)
 * hermes-agent/start.sh now resolves its own directory (no hardcoded
   /home/core/stacktek path) and chmod 600's the .env files.
-
 * Hermes Kanban not working? How do I enable this feature?
 * I just told AI , its already installed and then it started working? 
 * Maybe some models just dont know how to navigate yet?
