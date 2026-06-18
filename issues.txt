@@ -1,14 +1,10 @@
-Dumfuck AI ( Thanks GLM 5.2 MAX ) 
-----------
-* Broke Everything!!!! Need to troubelshoot.
-
-Issues:
--------
-* After podman-compose down and up , unable to login?
-
 Works:
 ------
 * Nothing
+
+Not working:
+------------
+* 
 
 Remove:
 -------
