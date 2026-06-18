@@ -28,9 +28,9 @@ services:
       OPENCLAW_OTEL_PRELOADED: ${OPENCLAW_OTEL_PRELOADED}
       TZ: UTC
     volumes:
-      - /home/core/.openclaw:/home/node/.openclaw
-      - /home/core/.openclaw/workspace:/home/node/.openclaw/workspace
-      - /home/core/.openclaw-auth-profile-secrets:/home/node/.config/openclaw
+      - $HOME/.openclaw:/home/node/.openclaw
+      - $HOME/.openclaw/workspace:/home/node/.openclaw/workspace
+      - $HOME/.openclaw-auth-profile-secrets:/home/node/.config/openclaw
     cap_drop:
       - NET_RAW
       - NET_ADMIN
@@ -93,9 +93,9 @@ services:
       BROWSER: echo
       TZ: UTC
     volumes:
-      - /home/core/.openclaw:/home/node/.openclaw
-      - /home/core/.openclaw/workspace:/home/node/.openclaw/workspace
-      - /home/core/.openclaw-auth-profile-secrets:/home/node/.config/openclaw
+      - $HOME/.openclaw:/home/node/.openclaw
+      - $HOME/.openclaw/workspace:/home/node/.openclaw/workspace
+      - $HOME/.openclaw-auth-profile-secrets:/home/node/.config/openclaw
     stdin_open: true
     tty: true
     init: true
