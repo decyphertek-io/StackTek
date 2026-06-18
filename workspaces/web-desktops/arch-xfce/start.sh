@@ -52,4 +52,7 @@ su - adminotaur -c "
     --I-KNOW-THIS-IS-INSECURE
 "
 
-exec tail -F "/home/adminotaur/.vnc/$(hostname):1.log"
+# Use a glob like the Debian baseline so the tail never 404s if
+# TigerVNC names the log file differently (it includes the container
+# hostname, which under rootless Podman is the container ID).
+exec tail -F /home/adminotaur/.vnc/*:1.log

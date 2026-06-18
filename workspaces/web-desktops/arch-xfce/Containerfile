@@ -5,6 +5,7 @@ FROM docker.io/library/archlinux:latest
 
 RUN pacman-key --init >/dev/null 2>&1 || true \
     && pacman -Sy --noconfirm archlinux-keyring \
+    && pacman-key --populate archlinux >/dev/null 2>&1 || true \
     && pacman -Su --noconfirm \
     && pacman -S --noconfirm --needed \
         sudo ca-certificates curl wget dbus gnupg \
