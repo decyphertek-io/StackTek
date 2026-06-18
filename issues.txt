@@ -10,15 +10,6 @@ Remove:
 -------
 // sessions are in-memory — a stacktek restart logs everyone out. ( I dont this this in the login page )
 
-Update Script:
--------------
-* Create an update script in /opt/
-cd ~/.podman/stacktek
-podman-compose down
-git pull
-podman-compose pull
-podman-compose up -d --force-recreate
-
 Troublshooting:
 --------------
 podman logs stacktek 2>&1 | cat | grep -i "openclaw\|arch\|compose\|chromium\|kali\|failed\|error" | tail -50
