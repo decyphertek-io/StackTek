@@ -7,7 +7,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /home/core/.podman/stacktek/data/thunderbird:/config
+      - $HOME/stacktek/data/thunderbird:/config
     expose:
       - "3000"
       - "3001"

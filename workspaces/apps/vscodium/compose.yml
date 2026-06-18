@@ -9,7 +9,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /home/core/.podman/stacktek/data/vscodium:/config
+      - $HOME/stacktek/data/vscodium:/config
     expose:
       - "3000"
       - "3001"

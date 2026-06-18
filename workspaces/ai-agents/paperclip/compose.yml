@@ -9,7 +9,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     volumes:
-      - /home/core/.paperclip:/paperclip
+      - $HOME/.paperclip:/paperclip
     expose:
       - "3100"
     ports:

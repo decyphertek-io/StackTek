@@ -7,7 +7,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /home/core/.podman/stacktek/data/libreoffice:/config
+      - $HOME/stacktek/data/libreoffice:/config
     expose:
       - "3000"
       - "3001"
