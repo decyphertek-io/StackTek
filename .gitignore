@@ -1,0 +1,17 @@
+# Per-workspace .env files are gitignored — they contain user secrets (API keys).
+# Shipped as .env.example with placeholder values; orchestrator copies to .env
+# on first launch if .env is missing.
+workspaces/**/.env
+!workspaces/**/.env.example
+
+# State dirs (if running from the clone)
+/data/
+/caddy/data/
+/caddy/config/
+
+# Certs
+/certs/*.pem
+
+# Python
+__pycache__/
+*.pyc

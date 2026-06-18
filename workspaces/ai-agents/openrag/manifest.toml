@@ -5,3 +5,10 @@ category = "ai"
 icon = "openrag"
 web_port = 8080
 data_path = "/app/model_weights"
+
+[[config_fields]]
+key = "OPENAI_API_KEY"
+label = "OpenAI API Key"
+description = "OpenAI / GPT API key. Required for embeddings + LLM calls."
+secret = true
+required = false
