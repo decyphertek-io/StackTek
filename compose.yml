@@ -26,7 +26,10 @@ services:
       - STACKTEK_TLS_CERT=/certs/cert.pem
       - STACKTEK_TLS_KEY=/certs/key.pem
     volumes:
-      - /home/core/.podman/stacktek/workspaces:/workspaces:ro,z
+      # /workspaces is mounted read-write so the orchestrator can edit
+      # per-workspace .env files from the dashboard Config modal (AI-agent
+      # API keys). Discovery + Containerfile builds still work either way.
+      - /home/core/.podman/stacktek/workspaces:/workspaces:rw,z
       - /home/core/.podman/stacktek/data:/data:rw
       # Same self-signed cert Caddy serves — the bridge hop is encrypted too.
       - /home/core/.podman/stacktek/certs:/certs:ro,z
