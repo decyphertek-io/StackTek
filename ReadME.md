@@ -43,6 +43,9 @@ sudo sh -c 'echo "net.ipv4.ip_unprivileged_port_start=443" >> /etc/sysctl.conf'
 sudo sysctl -p /etc/sysctl.conf
 # Start Stacktek
 podman-compose -f compose.yml up -d
+
+#optional cleanup
+
 ```
 
 ### Accessing StackTek
