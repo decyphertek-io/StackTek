@@ -2,6 +2,9 @@ Dumfuck AI ( Thanks GLM 5.2 MAX )
 ----------
 * Broke Everything!!!! Need to troubelshoot.
 
+Issues:
+-------
+* After podman-compose down and up , unable to login?
 
 Works:
 ------
@@ -24,16 +27,3 @@ Troublshooting:
 --------------
 podman logs stacktek 2>&1 | cat | grep -i "openclaw\|arch\|compose\|chromium\|kali\|failed\|error" | tail -50
 
-Fixes:
-------
-* Hermes Agent is copying the APi key incorrectly with [200~ added before and after?
-* Root cause: bracketed-paste-mode escape sequences (ESC[200~ ... ESC[201~)
-  leaking into the file when pasting into vi.
-* Fix: do NOT paste API keys into vi. Use one of:
-    printf 'ANTHROPIC_API_KEY=sk-...\n' >> /home/core/.hermes/.env
-    nano /home/core/.hermes/.env   (nano strips the bracket markers)
-* hermes-agent/start.sh now resolves its own directory (no hardcoded
-  /home/core/stacktek path) and chmod 600's the .env files.
-* Hermes Kanban not working? How do I enable this feature?
-* I just told AI , its already installed and then it started working? 
-* Maybe some models just dont know how to navigate yet?
