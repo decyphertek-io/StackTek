@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         pipewire pipewire-pulse pipewire-audio wireplumber \
         pulseaudio-utils \
         firefox-esr nano vim git \
+        ffmpeg gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly gstreamer1.0-libav libavcodec-extra \
         net-tools iputils-ping \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 

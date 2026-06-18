@@ -8,12 +8,16 @@ ENV LANG=C.UTF-8 \
 
 RUN dnf install -y dnf-plugins-core \
     && dnf install -y epel-release \
+    && dnf install -y "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm" \
+       "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm" || true \
     && dnf install -y --allowerasing \
         sudo ca-certificates curl wget gnupg2 glibc-langpack-en \
         dbus dbus-x11 \
         tigervnc-server tigervnc-server-minimal tigervnc \
         @xfce-desktop \
         firefox \
+        ffmpeg gstreamer1-plugins-good gstreamer1-plugins-bad-free \
+        gstreamer1-plugins-ugly-free gstreamer1-libav \
         pipewire pipewire-pulseaudio wireplumber pulseaudio-utils \
         nano vim git \
         procps-ng iproute iputils hostname \

@@ -13,6 +13,7 @@ RUN pacman-key --init >/dev/null 2>&1 || true \
         xfce4-whiskermenu-plugin xfce4-clipman-plugin \
         pipewire pipewire-pulse wireplumber libpulse pulseaudio-utils \
         firefox nano vim git \
+        ffmpeg gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav \
         iproute2 inetutils procps-ng \
     && pacman -Scc --noconfirm
 
