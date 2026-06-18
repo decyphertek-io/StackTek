@@ -23,7 +23,7 @@ services:
       - ${STACKTEK_STATE_DIR:-.}/workspaces:/workspaces:rw,z
       - ${STACKTEK_STATE_DIR:-.}/data:/data:rw
       - ${STACKTEK_STATE_DIR:-.}/certs:/certs:ro,z
-      - ${PODMAN_SOCK:-${XDG_RUNTIME_DIR:-/run/user/1000}/podman/podman.sock}:/run/podman.sock:z
+      - ${PODMAN_SOCK:-$XDG_RUNTIME_DIR/podman/podman.sock}:/run/podman.sock:z
     security_opt:
       - "label:disable"
     restart: unless-stopped
