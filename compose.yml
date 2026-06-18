@@ -22,7 +22,7 @@ services:
       - $HOME/stacktek/workspaces:/workspaces:rw,z
       - $HOME/stacktek/data:/data:rw
       - $HOME/stacktek/certs:/certs:ro,z
-      - $HOME/podman/podman.sock:/run/podman.sock:z
+      - $XDG_RUNTIME_DIR/podman/podman.sock:/run/podman.sock:z
     security_opt:
       - "label:disable"
     restart: unless-stopped
