@@ -10,6 +10,11 @@ Remove:
 -------
 // sessions are in-memory — a stacktek restart logs everyone out. ( I dont this this in the login page )
 
+Change:
+------
+* Should say Decyphertek LLC 
+// PolyForm Noncommercial 1.0.0 // decyphertek
+
 Troublshooting:
 --------------
 podman logs stacktek 2>&1 | cat | grep -i "openclaw\|arch\|compose\|chromium\|kali\|failed\|error" | tail -50
