@@ -3,5 +3,12 @@ display_name = "Openclaw"
 description = "Open-source autonomous research and red-team agent."
 category = "ai"
 icon = "openclaw"
-web_port = 8000
+# The gateway service listens on 18789 (see compose.yml). The previous
+# value of 8000 caused wait_for_port to time out and mark the session
+# failed — there is no listener on 8000 in this stack.
+web_port = 18789
+# Compose service name stacktek routes traffic to. Without this, stacktek
+# guesses `openclaw` (the workspace name) and falls back to the first
+# service. Naming it explicitly removes the ambiguity.
+primary_service = "openclaw-gateway"
 data_path = "/data"

@@ -30,7 +30,9 @@
             transport http {
                 tls
                 tls_insecure_skip_verify
-                versions 1.1
+                # Let Caddy negotiate h2/h1.1 automatically. Pinning
+                # versions 1.1 broke WebSocket upgrades on heavier pages
+                # (Kali/Chromium) and suppressed ALPN h2 advertisement.
             }
         }
     }
@@ -56,7 +58,6 @@
             transport http {
                 tls
                 tls_insecure_skip_verify
-                versions 1.1
             }
         }
     }
