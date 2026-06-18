@@ -1,0 +1,6 @@
+name = "dvwa"
+display_name = "DVWA"
+description = "Damn Vulnerable Web Application — PHP/MySQL app for security testing and learning."
+category = "cyberlab"
+icon = "dvwa"
+web_port = 80
