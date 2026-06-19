@@ -1,0 +1,9 @@
+name = "windows"
+display_name = "Windows / Windows 11"
+description = "Windows 11 desktop VM via dockurr/windows (QEMU/KVM). Boots a full Windows 11 image; web UI on 8006, RDP on 3389. Requires host /dev/kvm + NET_ADMIN."
+category = "desktop"
+icon = "windows"
+web_port = 8006
+primary_service = "windows"
+coming_soon = true
+data_path = "/storage"
