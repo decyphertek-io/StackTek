@@ -39,7 +39,7 @@ chmod 0644 certs/key.pem certs/cert.pem
 # If you need 443 to work on CoreOS or RedHat based Systems with SeLinux
 sudo sh -c 'echo "net.ipv4.ip_unprivileged_port_start=443" >> /etc/sysctl.conf'
 sudo sysctl -p /etc/sysctl.conf
-# Optional: Make sure podman.socket is running
+# Optional: Make sure podman.socket is running and stale directories removed
 systemctl --user start podman.socket
 [ -S /run/user/1000/podman/podman.sock ] && echo OK || { rmdir /run/user/1000/podman/podman.sock 2>/dev/null; systemctl --user restart podman.socket; }
 # Start Stacktek
