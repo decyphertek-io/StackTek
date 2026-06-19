@@ -1,0 +1,8 @@
+name = "fedora-gnome"
+display_name = "Fedora / GNOME"
+description = "Fedora desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "fedora"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

@@ -1,0 +1,8 @@
+name = "rocky-kde"
+display_name = "Rocky / KDE"
+description = "Rocky Linux 9 desktop with KDE Plasma, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "rocky"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

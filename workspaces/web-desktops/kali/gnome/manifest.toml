@@ -1,0 +1,8 @@
+name = "kali-gnome"
+display_name = "Kali / GNOME"
+description = "Kali Rolling desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "kali"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

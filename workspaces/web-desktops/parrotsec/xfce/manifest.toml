@@ -1,5 +1,5 @@
 name = "parrotsec-xfce"
-display_name = "ParrotSec / XFCE"
+display_name = "Parrot / XFCE"
 description = "Parrot Security OS desktop with XFCE and TigerVNC."
 category = "desktop"
 icon = "parrot"

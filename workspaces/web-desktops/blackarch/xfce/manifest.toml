@@ -1,0 +1,8 @@
+name = "blackarch-xfce"
+display_name = "BlackArch / XFCE"
+description = "BlackArch desktop with XFCE, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "blackarch"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

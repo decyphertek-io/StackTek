@@ -1,0 +1,8 @@
+name = "arch-kde"
+display_name = "Arch / KDE"
+description = "Arch Linux desktop with KDE Plasma, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "arch"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

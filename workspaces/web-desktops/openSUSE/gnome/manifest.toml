@@ -1,0 +1,8 @@
+name = "opensuse-gnome"
+display_name = "openSUSE / GNOME"
+description = "openSUSE Leap desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "opensuse"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

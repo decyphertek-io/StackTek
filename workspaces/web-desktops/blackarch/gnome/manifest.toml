@@ -1,0 +1,8 @@
+name = "blackarch-gnome"
+display_name = "BlackArch / GNOME"
+description = "BlackArch desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "blackarch"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

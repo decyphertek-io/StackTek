@@ -1,0 +1,8 @@
+name = "fedora-kde"
+display_name = "Fedora / KDE"
+description = "Fedora desktop with KDE Plasma, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "fedora"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

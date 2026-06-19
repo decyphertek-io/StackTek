@@ -1,0 +1,8 @@
+name = "kali-kde"
+display_name = "Kali / KDE"
+description = "Kali Rolling desktop with KDE Plasma, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "kali"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

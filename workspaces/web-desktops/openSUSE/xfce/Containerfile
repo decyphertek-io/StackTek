@@ -1,0 +1,45 @@
+# openSUSE Leap + XFCE + TigerVNC + PipeWire (zypper).
+# Extra GUIs: workspaces/apps/<app-name>/.
+
+FROM docker.io/opensuse/leap:latest
+
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
+
+# zypper patterns group the DE; Packman repo carries the codec set.
+RUN zypper --non-interactive ar --refresh --enable \
+        https://mirrors.opensuse.org/packman/suse/openSUSE_Leap_$(rpm -E %releasever)/Packman.repo \
+        packman 2>/dev/null || true \
+    && zypper --non-interactive --gpg-auto-import-keys dup \
+    && zypper --non-interactive install -t pattern xfce \
+    && zypper --non-interactive install \
+        sudo ca-certificates curl wget gnupg \
+        dbus dbus-1 dbus-x11 \
+        tigervnc tigervnc-server \
+        pipewire pipewire-pulse pipewire-audio wireplumber pulseaudio-utils \
+        MozillaFirefox \
+        ffmpeg gstreamer-plugins-good gstreamer-plugins-bad \
+        gstreamer-plugins-ugly gstreamer-plugins-libav \
+        nano vim git \
+        iproute2 iputils procps \
+    && zypper --non-interactive clean -a
+
+RUN useradd -m -s /bin/bash -u 1000 -G video,plugdev,audio adminotaur \
+    && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
+    && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
+                /home/adminotaur/data \
+    && printf '#!/bin/sh\nexport XKL_XMODMAP_DISABLE=1\nexport XDG_DATA_DIRS="/usr/local/share:/usr/share"\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nxfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null || true\nxfce4-session\n' \
+        > /home/adminotaur/.vnc/xstartup \
+    && printf '#!/bin/sh\nexport XKL_XMODMAP_DISABLE=1\nexport XDG_DATA_DIRS="/usr/local/share:/usr/share"\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nxfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null || true\nxfce4-session\n' \
+        > /home/adminotaur/.config/tigervnc/xstartup \
+    && chmod +x /home/adminotaur/.vnc/xstartup /home/adminotaur/.config/tigervnc/xstartup \
+    && printf 'session=xfce4\ngeometry=1920x1080\ndepth=24\nlocalhost=no\n' \
+        > /home/adminotaur/.vnc/config \
+    && chown -R adminotaur:adminotaur /home/adminotaur
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 5901 4713
+ENV USER=adminotaur HOME=/home/adminotaur DISPLAY=:1
+CMD ["/start.sh"]

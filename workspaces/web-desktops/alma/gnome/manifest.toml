@@ -1,0 +1,8 @@
+name = "alma-gnome"
+display_name = "AlmaLinux / GNOME"
+description = "AlmaLinux 9 desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "alma"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

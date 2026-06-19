@@ -1,0 +1,8 @@
+name = "pureos-xfce"
+display_name = "PureOS / XFCE"
+description = "PureOS desktop with XFCE, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "pureos"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

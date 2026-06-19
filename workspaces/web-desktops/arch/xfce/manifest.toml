@@ -1,5 +1,5 @@
 name = "arch-xfce"
-display_name = "Arch Linux / XFCE"
+display_name = "Arch / XFCE"
 description = "Rolling-release Arch desktop with XFCE and TigerVNC."
 category = "desktop"
 icon = "arch"

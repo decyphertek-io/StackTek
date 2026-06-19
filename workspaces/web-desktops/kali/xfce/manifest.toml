@@ -1,5 +1,5 @@
 name = "kali-xfce"
-display_name = "Kali Linux / XFCE"
+display_name = "Kali / XFCE"
 description = "Kali Linux Rolling desktop with XFCE, TigerVNC, and WebRTC audio."
 category = "desktop"
 icon = "kali"

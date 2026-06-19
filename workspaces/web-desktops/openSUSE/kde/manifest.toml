@@ -1,0 +1,8 @@
+name = "opensuse-kde"
+display_name = "openSUSE / KDE"
+description = "openSUSE Leap desktop with KDE Plasma, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "opensuse"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

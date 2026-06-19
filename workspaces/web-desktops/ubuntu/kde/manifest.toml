@@ -1,0 +1,8 @@
+name = "ubuntu-kde"
+display_name = "Ubuntu / KDE"
+description = "Ubuntu LTS desktop with KDE Plasma, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "ubuntu"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

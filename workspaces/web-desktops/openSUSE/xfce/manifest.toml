@@ -1,0 +1,8 @@
+name = "opensuse-xfce"
+display_name = "openSUSE / XFCE"
+description = "openSUSE Leap desktop with XFCE, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "opensuse"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

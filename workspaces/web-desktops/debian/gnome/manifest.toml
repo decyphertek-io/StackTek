@@ -1,0 +1,8 @@
+name = "debian-gnome"
+display_name = "Debian / GNOME"
+description = "Debian 13 desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "debian"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

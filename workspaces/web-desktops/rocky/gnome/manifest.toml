@@ -1,0 +1,8 @@
+name = "rocky-gnome"
+display_name = "Rocky / GNOME"
+description = "Rocky Linux 9 desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "rocky"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

@@ -1,0 +1,8 @@
+name = "pureos-gnome"
+display_name = "PureOS / GNOME"
+description = "PureOS desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "pureos"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

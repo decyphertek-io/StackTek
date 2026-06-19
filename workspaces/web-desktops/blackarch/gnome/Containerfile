@@ -1,0 +1,40 @@
+# BlackArch + GNOME + TigerVNC + PipeWire (Arch-family).
+# Reuses the arch 5-try pacman retry loop — Arch mirrors desync mid-sync.
+
+FROM docker.io/blackarchlinux/blackarch:latest
+
+RUN pacman-key --init >/dev/null 2>&1 || true \
+    && pacman -Sy --noconfirm archlinux-keyring \
+    && pacman-key --populate archlinux blackarch >/dev/null 2>&1 || true \
+    && for i in 1 2 3 4 5; do \
+         pacman -Syu --noconfirm \
+             sudo ca-certificates curl wget dbus gnupg \
+             tigervnc gnome gnome-browser-connector \
+             pipewire pipewire-pulse wireplumber libpulse \
+             firefox nano vim git \
+             ffmpeg gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav \
+             iproute2 inetutils procps-ng \
+         && break \
+         || { echo "pacman attempt $i failed, retrying..."; pacman -Sy >/dev/null 2>&1; sleep 3; }; \
+       done \
+    && pacman -Scc --noconfirm
+
+RUN useradd -m -s /bin/bash -u 1000 -G wheel,video,audio adminotaur \
+    && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
+    && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
+                /home/adminotaur/.config/pipewire/pipewire-pulse.conf.d \
+                /home/adminotaur/data \
+    && printf '%s\n' '#!/bin/sh' 'export XKL_XMODMAP_DISABLE=1' 'export XDG_DATA_DIRS="/usr/local/share:/usr/share:/usr/share/gnome"' 'unset SESSION_MANAGER' 'unset DBUS_SESSION_BUS_ADDRESS' 'gnome-session' \
+        > /home/adminotaur/.vnc/xstartup \
+    && cp /home/adminotaur/.vnc/xstartup /home/adminotaur/.config/tigervnc/xstartup \
+    && chmod +x /home/adminotaur/.vnc/xstartup /home/adminotaur/.config/tigervnc/xstartup \
+    && printf 'geometry=1920x1080\ndepth=24\nlocalhost=no\n' \
+        > /home/adminotaur/.vnc/config \
+    && chown -R adminotaur:adminotaur /home/adminotaur
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 5901 4713
+ENV USER=adminotaur HOME=/home/adminotaur DISPLAY=:1
+CMD ["/start.sh"]

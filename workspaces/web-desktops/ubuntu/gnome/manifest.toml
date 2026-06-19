@@ -1,0 +1,8 @@
+name = "ubuntu-gnome"
+display_name = "Ubuntu / GNOME"
+description = "Ubuntu LTS desktop with GNOME, TigerVNC, and WebRTC audio."
+category = "desktop"
+icon = "ubuntu"
+vnc_port = 5901
+audio_port = 4713
+data_path = "/home/adminotaur/data"

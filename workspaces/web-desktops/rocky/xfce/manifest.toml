@@ -1,5 +1,5 @@
 name = "rocky-xfce"
-display_name = "Rocky Linux / XFCE"
+display_name = "Rocky / XFCE"
 description = "Rocky Linux 9 desktop with XFCE and TigerVNC. RHEL-compatible."
 category = "desktop"
 icon = "rocky"
