@@ -1,0 +1,17 @@
+# IN DEV
+services:
+  obsidian:
+    image: lscr.io/linuxserver/obsidian:latest
+    container_name: obsidian
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+# Find the right path here
+    volumes:
+      - /path/to/config:/config
+    expose:
+      - "3000"
+      - "3001"
+    shm_size: "1gb"
+    restart: unless-stopped
