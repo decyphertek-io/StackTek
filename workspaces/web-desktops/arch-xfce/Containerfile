@@ -3,18 +3,23 @@
 
 FROM docker.io/library/archlinux:latest
 
+# Retry helper: Arch mirrors desync mid-sync, causing transient
+# "failed to retrieve some files". Retry up to 5 times with fresh metadata.
 RUN pacman-key --init >/dev/null 2>&1 || true \
     && pacman -Sy --noconfirm archlinux-keyring \
     && pacman-key --populate archlinux >/dev/null 2>&1 || true \
-    && pacman -Su --noconfirm \
-    && pacman -S --noconfirm --needed \
-        sudo ca-certificates curl wget dbus gnupg \
-        tigervnc xfce4 xfce4-terminal mousepad ristretto \
-        xfce4-whiskermenu-plugin xfce4-clipman-plugin \
-        pipewire pipewire-pulse wireplumber libpulse \
-        firefox nano vim git \
-        ffmpeg gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav \
-        iproute2 inetutils procps-ng \
+    && for i in 1 2 3 4 5; do \
+         pacman -Syu --noconfirm \
+             sudo ca-certificates curl wget dbus gnupg \
+             tigervnc xfce4 xfce4-terminal mousepad ristretto \
+             xfce4-whiskermenu-plugin xfce4-clipman-plugin \
+             pipewire pipewire-pulse wireplumber libpulse \
+             firefox nano vim git \
+             ffmpeg gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav \
+             iproute2 inetutils procps-ng \
+         && break \
+         || { echo "pacman attempt $i failed, retrying..."; pacman -Sy >/dev/null 2>&1; sleep 3; }; \
+       done \
     && pacman -Scc --noconfirm
 
 RUN useradd -m -s /bin/bash -u 1000 -G wheel,video,audio adminotaur \
