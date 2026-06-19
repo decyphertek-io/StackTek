@@ -32,15 +32,16 @@ git clone https://github.com/decyphertek-io/stacktek.git
 cd stacktek
 # Generate a self-signed TLS certificate (required before first run)
 mkdir -p certs
-
 openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
   -keyout certs/key.pem -out certs/cert.pem \
   -subj "/O=decyphertek/CN=stacktek"
 chmod 0644 certs/key.pem certs/cert.pem
-
 # If you need 443 to work on CoreOS or RedHat based Systems with SeLinux
 sudo sh -c 'echo "net.ipv4.ip_unprivileged_port_start=443" >> /etc/sysctl.conf'
 sudo sysctl -p /etc/sysctl.conf
+# Optional: Make sure podman.socket is running
+systemctl --user start podman.socket
+[ -S /run/user/1000/podman/podman.sock ] && echo OK || { rmdir /run/user/1000/podman/podman.sock 2>/dev/null; systemctl --user restart podman.socket; }
 # Start Stacktek
 podman-compose -f compose.yml up -d
 ```
