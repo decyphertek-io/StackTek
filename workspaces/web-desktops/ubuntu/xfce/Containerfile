@@ -1,19 +1,8 @@
-# Debian 13 + XFCE + TigerVNC + PipeWire.
+# Ubuntu LTS + XFCE + TigerVNC + PipeWire (same contract as Debian desktop).
 #
-# noVNC, the WebSocket proxy, and WebRTC audio signaling all live on the host
-# in stacktek. This container only exposes:
-#   * 5901  TigerVNC RFB (raw VNC, stacktek bridges to WS at /ws/vnc/<id>)
-#   * 4713  PipeWire's pipewire-pulse module-simple-protocol-tcp exposing the
-#           session's null sink as raw PCM (s16le/48k/stereo). Stacktek pulls,
-#           Opus-encodes, and ships over WebRTC at /ws/audio/<id>.
-#
-# TLS and auth are handled by Caddy + StackTek — no VNC password or cert needed.
-# Internal-only: runs on the private stacktek bridge network, never exposed
-# to the internet directly. Built fresh on every launch.
-#
-# Per-app desktops live under workspaces/apps/{chromium,libreoffice,...} on the AMI.
+# Per-app workspaces live under workspaces/apps/ — this desktop image stays lean.
 
-FROM docker.io/library/debian:13-slim
+FROM docker.io/library/ubuntu:latest
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
@@ -25,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         tigervnc-standalone-server tigervnc-common \
         pipewire pipewire-pulse pipewire-audio wireplumber \
         pulseaudio-utils \
-        firefox-esr nano vim git \
+        firefox nano vim git \
         ffmpeg gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
         gstreamer1.0-plugins-ugly gstreamer1.0-libav libavcodec-extra \
         net-tools iputils-ping \
