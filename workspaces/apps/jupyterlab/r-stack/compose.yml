@@ -1,0 +1,4 @@
+# https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html
+# IN DEV
+
+podman pull quay.io/jupyter/r-notebook

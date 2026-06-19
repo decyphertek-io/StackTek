@@ -1,0 +1,4 @@
+
+# https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html
+# IN DEV
+docker run -p 10000:8888 quay.io/jupyter/scipy-notebook:2025-12-31
