@@ -9,6 +9,7 @@ Not working:
 * Arch Linux
 * Openclaw
 * Terminal has output issues, sort of works, difficult to read. 
+* Opensuse, Alma, Fedora Images builds fail
 
 Remove:
 -------
