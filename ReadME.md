@@ -31,7 +31,6 @@ Under the hood, StackTek runs on Fedora CoreOS on AWS using rootless Podman, kee
 git clone https://github.com/decyphertek-io/stacktek.git
 cd stacktek
 # Generate a self-signed TLS certificate (required before first run)
-mkdir -p certs
 openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
   -keyout certs/key.pem -out certs/cert.pem \
   -subj "/O=decyphertek/CN=stacktek"
