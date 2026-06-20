@@ -1,6 +1,6 @@
 services:
   macos:
-    image: dockurr/macos
+    image: ghcr.io/dockur/macos:latest
     container_name: macos
     environment:
       VERSION: "15"
