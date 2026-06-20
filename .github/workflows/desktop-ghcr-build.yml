@@ -8,22 +8,14 @@ name: desktop ghcr build
 # independently of the stacktek orchestrator code.
 #
 # Triggers:
-#   - workflow_dispatch (manual) — the primary path. Run this after editing
-#     any web-desktop Containerfile to republish the affected images.
-#   - push to workspaces/web-desktops/** on main — convenience auto-rebuild.
+#   - workflow_dispatch (manual) — the only trigger. Run this after editing any
+#     web-desktop Containerfile to republish the affected images.
 #
 # Each desktop builds as its own matrix job so they run in parallel and a
 # single broken distro/DE does not block the rest.
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'workspaces/web-desktops/**/Containerfile'
-      - 'workspaces/web-desktops/**/start.sh'
-      - 'workspaces/web-desktops/**/manifest.toml'
-      - '.github/workflows/desktop-ghcr-build.yml'
 
 env:
   REGISTRY: ghcr.io
