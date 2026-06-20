@@ -13,7 +13,7 @@ Not working:
 
 Remove:
 -------
-// sessions are in-memory — a stacktek restart logs everyone out. ( I dont this this in the login page )
+// sessions are in-memory — a stacktek restart logs everyone out. ( I dont want this on the login page )
 
 Change:
 ------
