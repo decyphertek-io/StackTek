@@ -1,19 +1,5 @@
 name: desktop ghcr build
 
-# Builds every web desktop image (workspaces/web-desktops/<distro>/<de>/) and
-# pushes it to GHCR under the stacktek namespace, tagged as
-# ghcr.io/decyphertek-io/stacktek/<name>:latest where <name> is the manifest
-# name (e.g. debian-xfce, opensuse-gnome). This is separate from
-# stacktek-ghcr-build.yml so the desktop images can be maintained and updated
-# independently of the stacktek orchestrator code.
-#
-# Triggers:
-#   - workflow_dispatch (manual) — the only trigger. Run this after editing any
-#     web-desktop Containerfile to republish the affected images.
-#
-# Each desktop builds as its own matrix job so they run in parallel and a
-# single broken distro/DE does not block the rest.
-
 on:
   workflow_dispatch:
 
