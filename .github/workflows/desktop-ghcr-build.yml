@@ -1,0 +1,88 @@
+name: desktop ghcr build
+
+# Builds every web desktop image (workspaces/web-desktops/<distro>/<de>/) and
+# pushes it to GHCR under the stacktek namespace, tagged as
+# ghcr.io/decyphertek-io/stacktek/<name>:latest where <name> is the manifest
+# name (e.g. debian-xfce, opensuse-gnome). This is separate from
+# stacktek-ghcr-build.yml so the desktop images can be maintained and updated
+# independently of the stacktek orchestrator code.
+#
+# Triggers:
+#   - workflow_dispatch (manual) — the primary path. Run this after editing
+#     any web-desktop Containerfile to republish the affected images.
+#   - push to workspaces/web-desktops/** on main — convenience auto-rebuild.
+#
+# Each desktop builds as its own matrix job so they run in parallel and a
+# single broken distro/DE does not block the rest.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'workspaces/web-desktops/**/Containerfile'
+      - 'workspaces/web-desktops/**/start.sh'
+      - 'workspaces/web-desktops/**/manifest.toml'
+      - '.github/workflows/desktop-ghcr-build.yml'
+
+env:
+  REGISTRY: ghcr.io
+  NAMESPACE: decyphertek-io/stacktek
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List desktop workspaces with a Containerfile
+        id: list
+        run: |
+          # Each entry is "dir|name" — dir is the build context relative to
+          # repo root, name is the manifest name used as the image suffix.
+          entries=()
+          for ctx in workspaces/web-desktops/*/*/; do
+            [ -f "${ctx}Containerfile" ] || continue
+            manifest="${ctx}manifest.toml"
+            [ -f "$manifest" ] || { echo "WARN: no manifest.toml in $ctx — skipping"; continue; }
+            name=$(grep -m1 '^name' "$manifest" | cut -d'"' -f2)
+            [ -n "$name" ] || { echo "WARN: no name in $manifest — skipping"; continue; }
+            # GHCR image names must be lowercase; the manifest names already are,
+            # but guard against any uppercase slipping in.
+            name=$(echo "$name" | tr '[:upper:]' '[:lower:]')
+            entries+=("{\"context\":\"${ctx%/}\",\"name\":\"$name\"}")
+          done
+
+          # Emit a JSON array for the matrix include key.
+          json=$(printf '%s\n' "${entries[@]}" | jq -sc '.')
+          echo "matrix=$json" >> "$GITHUB_OUTPUT"
+          echo "Discovered desktops:"
+          echo "$json" | jq -r '.[] | "  \(.name)  (\(.context))"'
+
+  build:
+    needs: discover
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        include: ${{ fromJson(needs.discover.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+
+      - name: Build + push ${{ matrix.name }}
+        env:
+          IMAGE: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ matrix.name }}
+        run: |
+          echo "Building $IMAGE:latest from ${{ matrix.context }}"
+          docker build -t "${IMAGE}:latest" -f "${{ matrix.context }}/Containerfile" "${{ matrix.context }}"
+          docker push "${IMAGE}:latest"
+          echo "::notice::Pushed ${IMAGE}:latest"

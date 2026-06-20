@@ -1,4 +1,5 @@
 name = "fedora-kde"
+remote_image = "ghcr.io/decyphertek-io/stacktek/fedora-kde:latest"
 display_name = "Fedora / KDE"
 description = "Fedora desktop with KDE Plasma, TigerVNC, and WebRTC audio."
 category = "desktop"

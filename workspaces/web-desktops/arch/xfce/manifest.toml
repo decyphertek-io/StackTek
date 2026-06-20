@@ -1,4 +1,5 @@
 name = "arch-xfce"
+remote_image = "ghcr.io/decyphertek-io/stacktek/arch-xfce:latest"
 display_name = "Arch / XFCE"
 description = "Rolling-release Arch desktop with XFCE and TigerVNC."
 category = "desktop"

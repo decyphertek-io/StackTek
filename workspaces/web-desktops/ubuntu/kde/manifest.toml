@@ -1,4 +1,5 @@
 name = "ubuntu-kde"
+remote_image = "ghcr.io/decyphertek-io/stacktek/ubuntu-kde:latest"
 display_name = "Ubuntu / KDE"
 description = "Ubuntu LTS desktop with KDE Plasma, TigerVNC, and WebRTC audio."
 category = "desktop"

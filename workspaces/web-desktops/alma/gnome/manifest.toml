@@ -1,4 +1,5 @@
 name = "alma-gnome"
+remote_image = "ghcr.io/decyphertek-io/stacktek/alma-gnome:latest"
 display_name = "AlmaLinux / GNOME"
 description = "AlmaLinux 9 desktop with GNOME, TigerVNC, and WebRTC audio."
 category = "desktop"

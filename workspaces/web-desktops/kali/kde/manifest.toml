@@ -1,4 +1,5 @@
 name = "kali-kde"
+remote_image = "ghcr.io/decyphertek-io/stacktek/kali-kde:latest"
 display_name = "Kali / KDE"
 description = "Kali Rolling desktop with KDE Plasma, TigerVNC, and WebRTC audio."
 category = "desktop"

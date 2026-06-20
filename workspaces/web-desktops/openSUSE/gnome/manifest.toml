@@ -1,4 +1,5 @@
 name = "opensuse-gnome"
+remote_image = "ghcr.io/decyphertek-io/stacktek/opensuse-gnome:latest"
 display_name = "openSUSE / GNOME"
 description = "openSUSE Leap desktop with GNOME, TigerVNC, and WebRTC audio."
 category = "desktop"

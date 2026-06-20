@@ -1,4 +1,5 @@
 name = "pureos-kde"
+remote_image = "ghcr.io/decyphertek-io/stacktek/pureos-kde:latest"
 display_name = "PureOS / KDE"
 description = "PureOS desktop with KDE Plasma, TigerVNC, and WebRTC audio."
 category = "desktop"

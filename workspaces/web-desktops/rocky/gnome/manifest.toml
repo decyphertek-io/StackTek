@@ -1,4 +1,5 @@
 name = "rocky-gnome"
+remote_image = "ghcr.io/decyphertek-io/stacktek/rocky-gnome:latest"
 display_name = "Rocky / GNOME"
 description = "Rocky Linux 9 desktop with GNOME, TigerVNC, and WebRTC audio."
 category = "desktop"

@@ -1,4 +1,5 @@
 name = "arch-kde"
+remote_image = "ghcr.io/decyphertek-io/stacktek/arch-kde:latest"
 display_name = "Arch / KDE"
 description = "Arch Linux desktop with KDE Plasma, TigerVNC, and WebRTC audio."
 category = "desktop"

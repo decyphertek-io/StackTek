@@ -1,4 +1,5 @@
 name = "rocky-xfce"
+remote_image = "ghcr.io/decyphertek-io/stacktek/rocky-xfce:latest"
 display_name = "Rocky / XFCE"
 description = "Rocky Linux 9 desktop with XFCE and TigerVNC. RHEL-compatible."
 category = "desktop"

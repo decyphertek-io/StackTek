@@ -1,4 +1,5 @@
 name = "blackarch-xfce"
+remote_image = "ghcr.io/decyphertek-io/stacktek/blackarch-xfce:latest"
 display_name = "BlackArch / XFCE"
 description = "BlackArch desktop with XFCE, TigerVNC, and WebRTC audio."
 category = "desktop"

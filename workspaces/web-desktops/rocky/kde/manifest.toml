@@ -1,4 +1,5 @@
 name = "rocky-kde"
+remote_image = "ghcr.io/decyphertek-io/stacktek/rocky-kde:latest"
 display_name = "Rocky / KDE"
 description = "Rocky Linux 9 desktop with KDE Plasma, TigerVNC, and WebRTC audio."
 category = "desktop"
