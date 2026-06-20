@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         net-tools iputils-ping \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m -s /bin/bash -u 1000 -G sudo,video,plugdev,audio adminotaur \
+RUN useradd -m -s /bin/bash -u 1000 -o -G sudo,video,plugdev,audio adminotaur \
     && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
     && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
                 /home/adminotaur/.config/pipewire/pipewire-pulse.conf.d \

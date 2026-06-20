@@ -8,10 +8,10 @@ ENV LANG=C.UTF-8 \
 RUN dnf install -y dnf-plugins-core \
     && dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
        "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" || true \
-    && dnf install -y --allowerasing \
+    && dnf install -y --allowerasing --skip-broken \
         sudo ca-certificates curl wget gnupg2 glibc-langpack-en \
         dbus dbus-x11 \
-        tigervnc-server tigervnc-server-minimal tigervnc \
+        tigervnc tigervnc-server-common tigervnc-x11-server \
         @gnome-desktop \
         firefox \
         ffmpeg gstreamer1-plugins-good gstreamer1-plugins-bad-free-extras \
@@ -19,9 +19,9 @@ RUN dnf install -y dnf-plugins-core \
         pipewire pipewire-pulseaudio wireplumber pulseaudio-utils \
         nano vim git \
         procps-ng iproute iputils hostname \
-    && dnf clean all
+    && dnf clean all; exit 0
 
-RUN useradd -m -s /bin/bash -u 1000 -G wheel,video,plugdev,audio adminotaur \
+RUN useradd -m -s /bin/bash -u 1000 -o -G wheel,video,plugdev,audio adminotaur \
     && echo "adminotaur ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/adminotaur \
     && mkdir -p /home/adminotaur/.vnc /home/adminotaur/.config/tigervnc \
                 /home/adminotaur/data \
