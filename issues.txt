@@ -10,6 +10,7 @@ Not working:
 * Openclaw
 * Terminal has output issues, sort of works, difficult to read. 
 * Opensuse, Alma, Fedora Images builds fail
+* Delete - // delete failed delete failed: HTTP 403
 
 Remove:
 -------
