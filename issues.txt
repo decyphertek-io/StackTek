@@ -20,9 +20,7 @@ Change:
 ------
 * Should say Decyphertek LLC 
 // PolyForm Noncommercial 1.0.0 // decyphertek
-* Remove the giant delete button once its running. 
 * Add Fullscreen button to Web Desktop View
-* Some videos get no MIME type support found? ( May need ffmpeg /Codecs support )
 * Unable to copy from web dekstop to local desktop or vice versa. 
 * Copying from the Stacktek interface works just not within a web desktop?
 
