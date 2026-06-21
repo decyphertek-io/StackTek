@@ -61,3 +61,31 @@ jobs:
         run: |
           docker build -t "${{ env.IMAGE_CADDY }}:latest" -f caddy/Containerfile caddy
           docker push "${{ env.IMAGE_CADDY }}:latest"
+
+      - name: Prune old untagged GHCR versions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # NAMESPACE is decyphertek-io/stacktek; packages live under the org
+          # decyphertek-io. Package names: stacktek/stacktek, stacktek/caddy-coraza.
+          ORG="decyphertek-io"
+          prune_pkg() {
+            local pkg="$1"
+            local enc; enc=$(printf '%s' "$pkg" | sed 's|/|%2F|g')
+            local base="/orgs/${ORG}/packages/container/${enc}/versions"
+            mapfile -t ids < <(gh api --paginate "$base" --jq '.[].id' 2>/dev/null)
+            local total=${#ids[@]}
+            echo "[$pkg] found $total versions"
+            [ "$total" -le 1 ] && { echo "[$pkg] nothing to prune"; return; }
+            local keep="${ids[0]}" deleted=0
+            for id in "${ids[@]:1}"; do
+              if gh api -X DELETE "${base}/${id}" 2>/dev/null; then
+                deleted=$((deleted+1))
+              else
+                echo "[$pkg] WARN: could not delete version $id"
+              fi
+            done
+            echo "[$pkg] pruned $deleted (kept newest $keep)"
+          }
+          prune_pkg "stacktek/stacktek"
+          prune_pkg "stacktek/caddy-coraza"

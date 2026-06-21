@@ -64,3 +64,34 @@ jobs:
           docker build -t "${IMAGE}:latest" -f "${{ matrix.context }}/Containerfile" "${{ matrix.context }}"
           docker push "${IMAGE}:latest"
           echo "::notice::Pushed ${IMAGE}:latest"
+
+      - name: Prune old untagged GHCR versions for ${{ matrix.name }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE: ${{ env.NAMESPACE }}/${{ matrix.name }}
+        run: |
+          # Keep only the newest version (the :latest just pushed); delete
+          # every older version so old digests don't accumulate in the package.
+          # The org is the first path segment of NAMESPACE.
+          ORG="${NAMESPACE%%/*}"
+          # GHCR package API needs the slash in the package name URL-encoded.
+          PKG_ENC=$(printf '%s' "$PACKAGE" | sed 's|/|%2F|g')
+          BASE="/orgs/${ORG}/packages/container/${PKG_ENC}/versions"
+
+          mapfile -t IDS < <(gh api --paginate "$BASE" --jq '.[].id' 2>/dev/null)
+          total=${#IDS[@]}
+          echo "Found $total versions for $PACKAGE"
+          [ "$total" -le 1 ] && { echo "Nothing to prune."; exit 0; }
+
+          # Newest version is the one that currently holds :latest — skip it
+          # (first in the list is most recent). Delete the rest.
+          keep="${IDS[0]}"
+          deleted=0
+          for id in "${IDS[@]:1}"; do
+            if gh api -X DELETE "${BASE}/${id}" 2>/dev/null; then
+              deleted=$((deleted+1))
+            else
+              echo "WARN: could not delete version $id (may be the tagged :latest)"
+            fi
+          done
+          echo "::notice::Pruned $deleted old version(s) for $PACKAGE (kept newest $keep)"
