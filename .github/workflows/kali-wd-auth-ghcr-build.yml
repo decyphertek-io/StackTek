@@ -1,0 +1,114 @@
+name: kali-wd-auth ghcr build
+
+# Builds the kali-wd-auth image and pushes it to GHCR under the stacktek
+# namespace. Triggered by ansible-build after it compiles the Rust binary
+# and uploads the workflow artifact. Running in this repo ensures GHCR links
+# the package to stacktek automatically.
+#
+# The Containerfile is inlined here because the stacktek repo doesn't host
+# the kali-wd-auth source — it lives in ansible-build/apps/kali-wd-auth/.
+# Keep this inline Containerfile in sync with
+# ansible-build/apps/kali-wd-auth/Containerfile.
+#
+# NOTE: This only builds the auth frontend image. The caddy-coraza and
+# kali-xfce images are built by their existing workflows and pulled at deploy.
+
+on:
+  repository_dispatch:
+    types: [kali-wd-auth-build]
+
+env:
+  IMAGE_KALI_WD_AUTH: ghcr.io/decyphertek-io/stacktek/kali-wd-auth
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download binary + static tarball from ansible-build
+        env:
+          RUN_ID: ${{ github.event.client_payload.run_id }}
+          CROSS_REPO_PAT: ${{ secrets.CROSS_REPO_PAT }}
+        run: |
+          ARTIFACT_URL=$(curl -sf \
+            -H "Authorization: token $CROSS_REPO_PAT" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/decyphertek-io/ansible-build/actions/runs/${RUN_ID}/artifacts" \
+            | jq -r '.artifacts[] | select(.name=="kali-wd-auth-release") | .archive_download_url')
+
+          curl -sfL \
+            -H "Authorization: token $CROSS_REPO_PAT" \
+            -o /tmp/kali-wd-auth-release.zip \
+            "$ARTIFACT_URL"
+
+          unzip /tmp/kali-wd-auth-release.zip -d /tmp/kali-wd-auth-release
+
+      - name: Stage binary and static assets into build context
+        run: |
+          cp /tmp/kali-wd-auth-release/kali-wd-auth ./kali-wd-auth
+          chmod +x ./kali-wd-auth
+          tar -xzf /tmp/kali-wd-auth-release/static.tar.gz -C .
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build + push kali-wd-auth
+        run: |
+          # Inline Containerfile — mirrors ansible-build/apps/kali-wd-auth/Containerfile.
+          # Keep both in sync.
+          cat > /tmp/Containerfile.kali-wd-auth <<'EOF'
+          FROM cgr.dev/chainguard/static:latest
+
+          LABEL org.opencontainers.image.title="kali-wd-auth" \
+                org.opencontainers.image.licenses="LicenseRef-PolyForm-Noncommercial-1.0.0"
+
+          ENV KALI_WD_BIND=0.0.0.0:8443 \
+              KALI_WD_DATA=/data \
+              KALI_WD_STATIC=/static \
+              KALI_WD_TLS_CERT=/certs/cert.pem \
+              KALI_WD_TLS_KEY=/certs/key.pem \
+              KALI_WD_VNC_HOST=kali-xfce \
+              KALI_WD_VNC_PORT=5901 \
+              KALI_WD_AUDIO_PORT=4713
+
+          COPY kali-wd-auth /kali-wd-auth
+          COPY static/      /static/
+
+          EXPOSE 8443
+          USER 0:0
+          HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+            CMD ["/kali-wd-auth", "healthcheck"]
+          ENTRYPOINT ["/kali-wd-auth"]
+          EOF
+
+          docker build -t "${{ env.IMAGE_KALI_WD_AUTH }}:latest" -f /tmp/Containerfile.kali-wd-auth .
+          docker push "${{ env.IMAGE_KALI_WD_AUTH }}:latest"
+
+      - name: Prune old untagged GHCR versions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ORG="decyphertek-io"
+          prune_pkg() {
+            local pkg="$1"
+            local enc; enc=$(printf '%s' "$pkg" | sed 's|/|%2F|g')
+            local base="/orgs/${ORG}/packages/container/${enc}/versions"
+            mapfile -t ids < <(gh api --paginate "$base" --jq '.[].id' 2>/dev/null)
+            local total=${#ids[@]}
+            echo "[$pkg] found $total versions"
+            [ "$total" -le 1 ] && { echo "[$pkg] nothing to prune"; return; }
+            local keep="${ids[0]}" deleted=0
+            for id in "${ids[@]:1}"; do
+              if gh api -X DELETE "${base}/${id}" 2>/dev/null; then
+                deleted=$((deleted+1))
+              else
+                echo "[$pkg] WARN: could not delete version $id"
+              fi
+            done
+            echo "[$pkg] pruned $deleted (kept newest $keep)"
+          }
+          prune_pkg "stacktek/kali-wd-auth"
