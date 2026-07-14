@@ -10,8 +10,12 @@ name: kali-wd-auth ghcr build
 # Keep this inline Containerfile in sync with
 # ansible-build/apps/kali-wd-auth/Containerfile.
 #
-# NOTE: This only builds the auth frontend image. The caddy-coraza and
-# kali-xfce images are built by their existing workflows and pulled at deploy.
+# NOTE: This workflow builds ALL three images the kali-wd deploy needs:
+#   1. kali-wd-auth  — from the ansible-build artifact (Rust binary + static)
+#   2. kali-xfce     — from workspaces/web-desktops/kali/xfce/Containerfile
+#   3. caddy-coraza  — from caddy/Containerfile
+# This makes the pipeline self-contained — running kali-wd-auth-build in
+# ansible-build produces every image podman-compose pull will fetch.
 
 on:
   repository_dispatch:
@@ -19,6 +23,8 @@ on:
 
 env:
   IMAGE_KALI_WD_AUTH: ghcr.io/decyphertek-io/stacktek/kali-wd-auth
+  IMAGE_KALI_XFCE: ghcr.io/decyphertek-io/stacktek/kali-xfce
+  IMAGE_CADDY_CORAZA: ghcr.io/decyphertek-io/stacktek/caddy-coraza
 
 jobs:
   images:
@@ -88,6 +94,21 @@ jobs:
           docker build -t "${{ env.IMAGE_KALI_WD_AUTH }}:latest" -f /tmp/Containerfile.kali-wd-auth .
           docker push "${{ env.IMAGE_KALI_WD_AUTH }}:latest"
 
+      - name: Build + push kali-xfce
+        run: |
+          echo "Building ${{ env.IMAGE_KALI_XFCE }}:latest from workspaces/web-desktops/kali/xfce/"
+          docker build -t "${{ env.IMAGE_KALI_XFCE }}:latest" \
+            -f workspaces/web-desktops/kali/xfce/Containerfile \
+            workspaces/web-desktops/kali/xfce/
+          docker push "${{ env.IMAGE_KALI_XFCE }}:latest"
+
+      - name: Build + push caddy-coraza
+        run: |
+          echo "Building ${{ env.IMAGE_CADDY_CORAZA }}:latest from caddy/"
+          docker build -t "${{ env.IMAGE_CADDY_CORAZA }}:latest" \
+            -f caddy/Containerfile caddy/
+          docker push "${{ env.IMAGE_CADDY_CORAZA }}:latest"
+
       - name: Prune old untagged GHCR versions
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -112,3 +133,5 @@ jobs:
             echo "[$pkg] pruned $deleted (kept newest $keep)"
           }
           prune_pkg "stacktek/kali-wd-auth"
+          prune_pkg "stacktek/kali-xfce"
+          prune_pkg "stacktek/caddy-coraza"
